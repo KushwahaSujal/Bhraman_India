@@ -60,6 +60,7 @@ export default function AIDestinationCard({ destination, compact = false }: AIDe
     if (destination) {
       fetchDestinationInfo()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [destination])
 
   if (loading) {

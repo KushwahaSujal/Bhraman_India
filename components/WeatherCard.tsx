@@ -95,6 +95,7 @@ export default function WeatherCard({
 
   useEffect(() => {
     fetchWeather()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location, showForecast])
 
   const getWeatherIcon = (condition: string) => {
