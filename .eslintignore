@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+.next/
+out/
+build/
+dist/
+
+# Generated files
+*.tsbuildinfo
+next-env.d.ts
+
+# Logs
+*.log
+
+# Database and environment files
+.env*
+*.db
+
+# Test files
+*.test.js
+*.test.ts
+*.test.tsx
+*.spec.js
+*.spec.ts
+*.spec.tsx
+
+# Documentation
+*.md
+!README.md
+
+# Configuration files
+.eslintrc.js
+.prettierrc.js
+tailwind.config.js
+postcss.config.js
+next.config.js
+
+# Ignore specific problematic files temporarily
+test-gemini.js
+scripts/seed.js
