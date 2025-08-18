@@ -20,8 +20,13 @@ const nextConfig = {
     // Allow production builds to successfully complete even if there are type errors
     ignoreBuildErrors: true,
   },
-  // Reduce bundle size by excluding server-only code from client bundles
-  serverComponentsExternalPackages: ['mongoose', 'bcryptjs', 'jsonwebtoken'],
+  // Webpack configuration for external packages
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.externals.push('mongoose', 'bcryptjs', 'jsonwebtoken', '@google/generative-ai');
+    }
+    return config;
+  },
 }
 
 module.exports = nextConfig

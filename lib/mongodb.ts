@@ -1,11 +1,15 @@
 import mongoose from 'mongoose'
 
-const MONGODB_URI = process.env.MONGODB_URI!
+const MONGODB_URI = process.env.MONGODB_URI
 
-if (!MONGODB_URI) {
-  throw new Error(
-    'Please define the MONGODB_URI environment variable inside .env.local'
-  )
+// Only validate MONGODB_URI in runtime, not during build
+function validateMongoUri() {
+  if (!MONGODB_URI) {
+    throw new Error(
+      'Please define the MONGODB_URI environment variable inside .env.local'
+    )
+  }
+  return MONGODB_URI
 }
 
 /**
@@ -20,6 +24,9 @@ if (!cached) {
 }
 
 async function connectDB() {
+  // Validate URI only when actually connecting
+  const uri = validateMongoUri()
+  
   if (cached.conn) {
     return cached.conn
   }
@@ -29,7 +36,7 @@ async function connectDB() {
       bufferCommands: false,
     }
 
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+    cached.promise = mongoose.connect(uri, opts).then((mongoose) => {
       return mongoose
     })
   }

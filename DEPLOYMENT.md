@@ -6,7 +6,8 @@ This guide will help you deploy your Bhromon tourism platform to Vercel for prod
 
 - GitHub account with Bhromon repository
 - Vercel account (free tier available)
-- Environment variables ready
+- MongoDB Atlas account for database
+- Google Gemini API key: `AIzaSyDSfvUsyIuDxiTU6onPNOFvOUWf0_OpGsU`
 
 ## Quick Deployment
 
@@ -38,17 +39,17 @@ This guide will help you deploy your Bhromon tourism platform to Vercel for prod
 
 Navigate to your Vercel project dashboard → Settings → Environment Variables
 
-### Required Variables
+### Required Variables (CRITICAL for deployment success)
 
 ```env
-# AI Configuration
-GEMINI_API_KEY=your_gemini_api_key_here
+# Database - MUST BE SET
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/bhromon?retryWrites=true&w=majority
 
-# Database (MongoDB Atlas recommended for production)
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/bhromon
-
-# Authentication
+# Authentication - MUST BE SET  
 JWT_SECRET=your_super_secure_jwt_secret_minimum_32_characters
+
+# AI Configuration - Already provided
+GEMINI_API_KEY=AIzaSyDSfvUsyIuDxiTU6onPNOFvOUWf0_OpGsU
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 
