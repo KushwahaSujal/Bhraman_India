@@ -4,6 +4,8 @@ import connectDB from '@/lib/mongodb'
 import { User } from '@/lib/models'
 import { signToken } from '@/lib/auth'
 
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
   try {
     await connectDB()

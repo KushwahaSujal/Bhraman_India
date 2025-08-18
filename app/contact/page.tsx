@@ -16,6 +16,8 @@ import {
   Globe
 } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
 export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: '',

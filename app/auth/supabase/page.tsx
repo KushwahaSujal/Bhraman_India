@@ -6,6 +6,9 @@ import { useAuth } from '@/lib/providers/auth-provider'
 import { Mail, Lock, User, Phone, ArrowRight, Eye, EyeOff } from 'lucide-react'
 import Link from 'next/link'
 
+// Ensure this page is rendered dynamically and not during static export
+export const dynamic = 'force-dynamic'
+
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true)
   const [showPassword, setShowPassword] = useState(false)

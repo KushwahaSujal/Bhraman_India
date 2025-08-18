@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { geminiService, ItineraryRequest } from '@/lib/services/gemini'
 
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
   try {
     const body: ItineraryRequest = await request.json()

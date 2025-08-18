@@ -30,6 +30,8 @@ import DestinationsWeather from '@/components/DestinationsWeather'
 import AIItineraryGenerator from '@/components/AIItineraryGenerator'
 import AIChatAssistant from '@/components/AIChatAssistant'
 
+export const dynamic = 'force-dynamic'
+
 export default function Dashboard() {
   const [activeSection, setActiveSection] = useState('overview')
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)

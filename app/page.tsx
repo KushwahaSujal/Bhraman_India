@@ -19,6 +19,9 @@ import {
   Compass
 } from 'lucide-react'
 
+// Ensure this page is rendered dynamically to avoid build-time env requirements
+export const dynamic = 'force-dynamic'
+
 export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrollY, setScrollY] = useState(0)
