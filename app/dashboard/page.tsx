@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { useAuth } from '@/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
+import { translations, languageOptions, type AppLanguage } from '@/lib/translations'
 import { 
   Camera, 
   MapPin, 
@@ -39,6 +40,7 @@ function decodeEscapedUnicode(text: string): string {
 
 export default function Dashboard() {
   const [activeSection, setActiveSection] = useState('overview')
+  const [language, setLanguage] = useState<AppLanguage>('English')
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [isEditingProfile, setIsEditingProfile] = useState(false)
   const [profileData, setProfileData] = useState({
@@ -60,6 +62,20 @@ export default function Dashboard() {
   const dashboardRef = useRef<HTMLDivElement>(null)
   const { user, loading, logout } = useAuth()
   const router = useRouter()
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const savedLanguage = window.localStorage.getItem('bhraman-language') as AppLanguage | null
+    if (savedLanguage && languageOptions.includes(savedLanguage)) {
+      setLanguage(savedLanguage)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem('bhraman-language', language)
+    }
+  }, [language])
 
   useEffect(() => {
     if (!loading && !user) {
@@ -137,33 +153,35 @@ export default function Dashboard() {
 
   if (!user) { return null }
 
+  const t = translations[language]
+
   const sidebarItems = [
-    { id: 'overview', label: 'Overview', icon: Star },
-    { id: 'weather', label: 'Weather Info', icon: Cloud },
-    { id: 'heritage', label: 'Heritage Sights', icon: Camera },
-    { id: 'guides', label: 'Guide Selection', icon: Users },
-    { id: 'hotels', label: 'Hotels', icon: Hotel },
-    { id: 'food', label: 'Food & Culture', icon: ChefHat },
-    { id: 'itinerary', label: 'AI Itinerary', icon: Brain },
-    { id: 'ecommerce', label: 'Local Shopping', icon: ShoppingCart },
-    { id: 'experiences', label: 'Cultural Events', icon: Calendar },
-    { id: 'packages', label: 'Special Packages', icon: MapPin },
-    { id: 'settings', label: 'Settings', icon: Settings },
+    { id: 'overview', label: t.sidebar.overview, icon: Star },
+    { id: 'weather', label: t.sidebar.weather, icon: Cloud },
+    { id: 'heritage', label: t.sidebar.heritage, icon: Camera },
+    { id: 'guides', label: t.sidebar.guides, icon: Users },
+    { id: 'hotels', label: t.sidebar.hotels, icon: Hotel },
+    { id: 'food', label: t.sidebar.food, icon: ChefHat },
+    { id: 'itinerary', label: t.sidebar.itinerary, icon: Brain },
+    { id: 'ecommerce', label: t.sidebar.ecommerce, icon: ShoppingCart },
+    { id: 'experiences', label: t.sidebar.experiences, icon: Calendar },
+    { id: 'packages', label: t.sidebar.packages, icon: MapPin },
+    { id: 'settings', label: t.sidebar.settings, icon: Settings },
   ]
 
   const quickStats = [
-    { label: 'Heritage Sites Explored', hindi: '\u0910\u0924\u093F\u0939\u093E\u0938\u093F\u0915 \u0938\u094D\u0925\u0932', value: '12', icon: '\u{1F3DB}\uFE0F', color: 'from-heritage-maroon to-heritage-bronze', description: 'Ancient temples & monuments' },
-    { label: 'Cultural Festivals', hindi: '\u0938\u093E\u0902\u0938\u094D\u0915\u0943\u0924\u093F\u0915 \u0924\u094D\u092F\u094B\u0939\u093E\u0930', value: '3', icon: '\u{1F3AD}', color: 'from-red-600 to-orange-500', description: 'Diwali, Holi, Navratri experiences' },
-    { label: 'Artisan Purchases', hindi: '\u0915\u093E\u0930\u0940\u0917\u0930\u0940 \u0916\u0930\u0940\u0926\u093E\u0930\u0940', value: '\u20B92,450', icon: '\u{1F3A8}', color: 'from-heritage-gold to-amber-600', description: 'Handloom & handicrafts' },
-    { label: 'Food Adventures', hindi: '\u0916\u093E\u0928\u093E \u0905\u0928\u0941\u092D\u0935', value: '8', icon: '\u{1F35B}', color: 'from-green-600 to-emerald-500', description: 'Authentic Indian cuisine' },
+    { label: t.heritageSitesExplored, value: '12', icon: '\u{1F3DB}\uFE0F', color: 'from-heritage-maroon to-heritage-bronze', description: t.heritageSitesDesc },
+    { label: t.culturalFestivals, value: '3', icon: '\u{1F3AD}', color: 'from-red-600 to-orange-500', description: t.festivalsDesc },
+    { label: t.artisanPurchases, value: '\u20B92,450', icon: '\u{1F3A8}', color: 'from-heritage-gold to-amber-600', description: t.artisanDesc },
+    { label: t.foodAdventures, value: '8', icon: '\u{1F35B}', color: 'from-green-600 to-emerald-500', description: t.foodAdventuresDesc },
   ]
 
   const recentActivities = [
-    { action: 'Visited Taj Mahal', location: 'Agra, Uttar Pradesh', time: '2 hours ago', icon: Camera, hindi: '\u0924\u093E\u091C \u092E\u0939\u0932', type: 'heritage' },
-    { action: 'Booked Heritage Walk with Local Guide', location: 'Old Delhi Heritage Trail', time: '1 day ago', icon: Users, hindi: '\u0935\u093F\u0930\u093E\u0938\u0924 \u092D\u094D\u0930\u092E\u0923', type: 'guide' },
-    { action: 'Purchased Banarasi Silk Saree', location: 'Varanasi Silk Market', time: '2 days ago', icon: ShoppingCart, hindi: '\u092C\u0928\u093E\u0930\u0938\u0940 \u0938\u093E\u0921\u093C\u0940', type: 'shopping' },
-    { action: 'Attended Kathak Dance Recital', location: 'India Habitat Centre, Delhi', time: '3 days ago', icon: Calendar, hindi: '\u0915\u0925\u0915 \u0928\u0943\u0924\u094D\u092F', type: 'cultural' },
-    { action: 'Enjoyed Rajasthani Thali', location: 'Chokhi Dhani, Jaipur', time: '4 days ago', icon: ChefHat, hindi: '\u0930\u093E\u091C\u0938\u094D\u0925\u093E\u0928\u0940 \u0925\u093E\u0932\u0940', type: 'food' }
+    { action: t.visitedTajMahal, location: t.tajMahalLocation, time: t.hrsAgo, icon: Camera, type: 'heritage' },
+    { action: t.bookedHeritageWalk, location: t.heritageWalkLocation, time: t.dayAgo, icon: Users, type: 'guide' },
+    { action: t.purchasedSaree, location: t.sareeLocation, time: t.daysAgo2, icon: ShoppingCart, type: 'shopping' },
+    { action: t.attendedKathak, location: t.kathakLocation, time: t.daysAgo3, icon: Calendar, type: 'cultural' },
+    { action: t.enjoyedThali, location: t.thaliLocation, time: t.daysAgo4, icon: ChefHat, type: 'food' }
   ]
 
   const renderContent = () => {
@@ -176,15 +194,15 @@ export default function Dashboard() {
               <div className="absolute bottom-0 left-0 opacity-10 text-8xl">🎭</div>
               <div className="relative z-10">
                 <h1 className="text-4xl font-heritage font-bold mb-2">
-                  <span className="font-hindi">\u0938\u094D\u0935\u093E\u0917\u0924\u092E!</span> Welcome back, {user?.name || profileData.fullName || 'Traveler'}!
+                  {t.swaagatam} {t.welcomeBack} {user?.name || profileData.fullName || 'Traveler'}!
                 </h1>
                 <p className="text-heritage-beige text-lg mb-4">
-                  Continue your journey through the rich cultural tapestry of <span className="font-hindi">\u0905\u0924\u0941\u0932\u094D\u092F \u092D\u093E\u0930\u0924</span> (Incredible India)
+                  {t.overviewSubtitle} {t.incredibleIndia}
                 </p>
                 <div className="flex items-center space-x-6 text-sm">
                   <div className="flex items-center space-x-2">
                     <div className="w-2 h-2 bg-heritage-gold rounded-full animate-pulse"></div>
-                    <span>Current Season: <span className="font-hindi">\u0938\u0930\u094D\u0926\u0940</span> (Winter) - Perfect for Heritage Tours</span>
+                    <span>{t.currentSeason} {t.winter} - {t.perfectForHeritage}</span>
                   </div>
                 </div>
               </div>
@@ -192,12 +210,11 @@ export default function Dashboard() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {quickStats.map((stat, index) => (
-                <motion.div key={stat.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }} className="card-heritage p-6 group hover:shadow-2xl transition-all duration-300">
+                <motion.div key={index} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }} className="card-heritage p-6 group hover:shadow-2xl transition-all duration-300">
                   <div className={`w-16 h-16 bg-gradient-to-r ${stat.color} rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
                     <span className="text-3xl">{stat.icon}</span>
                   </div>
                   <h3 className="font-semibold text-gray-800 mb-1">{stat.label}</h3>
-                  <p className="text-heritage-gold font-hindi text-sm mb-2">{stat.hindi}</p>
                   <p className="text-3xl font-bold text-heritage-maroon mb-2">{stat.value}</p>
                   <p className="text-xs text-gray-600">{stat.description}</p>
                 </motion.div>
@@ -207,8 +224,7 @@ export default function Dashboard() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               <div className="lg:col-span-2 card-heritage p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-semibold text-gray-800">Recent Adventures</h2>
-                  <span className="text-heritage-gold font-hindi">\u0939\u093E\u0932 \u0915\u0947 \u0905\u0928\u0941\u092D\u0935</span>
+                  <h2 className="text-2xl font-semibold text-gray-800">{t.recentAdventures}</h2>
                 </div>
                 <div className="space-y-4">
                   {recentActivities.map((activity, index) => (
@@ -224,7 +240,6 @@ export default function Dashboard() {
                       </div>
                       <div className="flex-1">
                         <p className="font-semibold text-gray-800">{activity.action}</p>
-                        <p className="text-heritage-gold font-hindi text-sm">{activity.hindi}</p>
                         <p className="text-sm text-gray-600">{activity.location}</p>
                         <p className="text-xs text-gray-500">{activity.time}</p>
                       </div>
@@ -237,108 +252,93 @@ export default function Dashboard() {
                 <div className="card-heritage p-6">
                   <h3 className="text-xl font-semibold mb-4 text-gray-800 flex items-center">
                     <Calendar className="w-5 h-5 mr-2 text-heritage-maroon" />
-                    Indian Festivals
+                    {t.indianFestivals}
                   </h3>
                   <div className="space-y-4 max-h-80 overflow-y-auto">
                     <div className="border-l-4 border-heritage-maroon pl-4">
-                      <h4 className="font-semibold text-heritage-maroon">Diwali</h4>
-                      <p className="text-heritage-gold font-hindi text-sm">\u0926\u0940\u092A\u093E\u0935\u0932\u0940</p>
-                      <p className="text-xs text-gray-600 mt-1">Oct-Nov \u2022 Festival of Lights celebrated across India with lamps, fireworks, sweets, and family gatherings.</p>
+                      <h4 className="font-semibold text-heritage-maroon">{t.diwali}</h4>
+                      <p className="text-xs text-gray-600 mt-1">Oct-Nov \u2022 {t.diwaliDesc}</p>
                     </div>
                     <div className="border-l-4 border-heritage-bronze pl-4">
-                      <h4 className="font-semibold text-heritage-bronze">Holi</h4>
-                      <p className="text-heritage-gold font-hindi text-sm">\u0939\u094B\u0932\u0940</p>
-                      <p className="text-xs text-gray-600 mt-1">Mar \u2022 Festival of Colors celebrating spring, love, and the triumph of good over evil.</p>
+                      <h4 className="font-semibold text-heritage-bronze">{t.holi}</h4>
+                      <p className="text-xs text-gray-600 mt-1">Mar \u2022 {t.holiDesc}</p>
                     </div>
                     <div className="border-l-4 border-heritage-gold pl-4">
-                      <h4 className="font-semibold text-heritage-gold">Navratri</h4>
-                      <p className="text-heritage-gold font-hindi text-sm">\u0928\u0935\u0930\u093E\u0924\u094D\u0930\u093F</p>
-                      <p className="text-xs text-gray-600 mt-1">Sep-Oct \u2022 Nine nights of dance, devotion, and celebration honoring Goddess Durga.</p>
+                      <h4 className="font-semibold text-heritage-gold">{t.navratri}</h4>
+                      <p className="text-xs text-gray-600 mt-1">Sep-Oct \u2022 {t.navratriDesc}</p>
                     </div>
                     <div className="border-l-4 border-purple-500 pl-4">
-                      <h4 className="font-semibold text-purple-500">Ganesh Chaturthi</h4>
-                      <p className="text-heritage-gold font-hindi text-sm">\u0917\u0923\u0947\u0936 \u091A\u0924\u0941\u0930\u094D\u0925\u0940</p>
-                      <p className="text-xs text-gray-600 mt-1">Aug-Sep \u2022 Grand festival celebrating Lord Ganesha with beautiful idols and processions.</p>
+                      <h4 className="font-semibold text-purple-500">{t.ganeshChaturthi}</h4>
+                      <p className="text-xs text-gray-600 mt-1">Aug-Sep \u2022 {t.ganeshDesc}</p>
                     </div>
                     <div className="border-l-4 border-green-500 pl-4">
-                      <h4 className="font-semibold text-green-500">Pongal</h4>
-                      <p className="text-heritage-gold font-hindi text-sm">\u092A\u094B\u0902\u0917\u0932</p>
-                      <p className="text-xs text-gray-600 mt-1">Jan \u2022 Tamil harvest festival thanking the Sun God, celebrated over four days.</p>
+                      <h4 className="font-semibold text-green-500">{t.pongal}</h4>
+                      <p className="text-xs text-gray-600 mt-1">Jan \u2022 {t.pongalDesc}</p>
                     </div>
                     <div className="border-l-4 border-blue-500 pl-4">
-                      <h4 className="font-semibold text-blue-500">Onam</h4>
-                      <p className="text-heritage-gold font-hindi text-sm">\u0913\u0923\u092E</p>
-                      <p className="text-xs text-gray-600 mt-1">Aug-Sep \u2022 Kerala's grand harvest festival with boat races, floral designs, and feasts.</p>
+                      <h4 className="font-semibold text-blue-500">{t.onam}</h4>
+                      <p className="text-xs text-gray-600 mt-1">Aug-Sep \u2022 {t.onamDesc}</p>
                     </div>
                     <div className="border-l-4 border-red-500 pl-4">
-                      <h4 className="font-semibold text-red-500">Eid ul-Fitr</h4>
-                      <p className="text-heritage-gold font-hindi text-sm">\u0908\u0926 \u0909\u0932-\u092B\u093C\u093F\u0924\u094D\u0930</p>
-                      <p className="text-xs text-gray-600 mt-1">Varies \u2022 Joyous celebration marking end of Ramadan with prayers, feasting, and charity.</p>
+                      <h4 className="font-semibold text-red-500">{t.eidUlFitr}</h4>
+                      <p className="text-xs text-gray-600 mt-1">{t.eidDesc}</p>
                     </div>
                     <div className="border-l-4 border-orange-500 pl-4">
-                      <h4 className="font-semibold text-orange-500">Baisakhi</h4>
-                      <p className="text-heritage-gold font-hindi text-sm">\u092C\u0948\u0938\u093E\u0916\u0940</p>
-                      <p className="text-xs text-gray-600 mt-1">Apr \u2022 Sikh New Year and harvest festival celebrated with Bhangra and community gatherings.</p>
+                      <h4 className="font-semibold text-orange-500">{t.baisakhi}</h4>
+                      <p className="text-xs text-gray-600 mt-1">Apr \u2022 {t.baishakhiDesc}</p>
                     </div>
                     <div className="border-l-4 border-pink-500 pl-4">
-                      <h4 className="font-semibold text-pink-500">Durga Puja</h4>
-                      <p className="text-heritage-gold font-hindi text-sm">\u0926\u0941\u0930\u094D\u0917\u093E \u092A\u0942\u091C\u093E</p>
-                      <p className="text-xs text-gray-600 mt-1">Sep-Oct \u2022 East India's grandest festival celebrating Goddess Durga with elaborate pandals.</p>
+                      <h4 className="font-semibold text-pink-500">{t.durgaPuja}</h4>
+                      <p className="text-xs text-gray-600 mt-1">Sep-Oct \u2022 {t.durgaPujaDesc}</p>
                     </div>
                     <div className="border-l-4 border-teal-500 pl-4">
-                      <h4 className="font-semibold text-teal-500">Makar Sankranti</h4>
-                      <p className="text-heritage-gold font-hindi text-sm">\u092E\u0915\u0930 \u0938\u0902\u0915\u094D\u0930\u093E\u0902\u0924\u093F</p>
-                      <p className="text-xs text-gray-600 mt-1">Jan \u2022 Harvest festival celebrated with kite flying, sesame sweets, and river dips.</p>
+                      <h4 className="font-semibold text-teal-500">{t.makarSankranti}</h4>
+                      <p className="text-xs text-gray-600 mt-1">Jan \u2022 {t.makarDesc}</p>
                     </div>
                     <div className="border-l-4 border-indigo-500 pl-4">
-                      <h4 className="font-semibold text-indigo-500">Bihu</h4>
-                      <p className="text-heritage-gold font-hindi text-sm">\u092C\u093F\u0939\u0942</p>
-                      <p className="text-xs text-gray-600 mt-1">Apr \u2022 Assamese New Year with traditional dance, music, and feasting.</p>
+                      <h4 className="font-semibold text-indigo-500">{t.bihu}</h4>
+                      <p className="text-xs text-gray-600 mt-1">Apr \u2022 {t.bihuDesc}</p>
                     </div>
                     <div className="border-l-4 border-yellow-500 pl-4">
-                      <h4 className="font-semibold text-yellow-500">Pushkar Mela</h4>
-                      <p className="text-heritage-gold font-hindi text-sm">\u092A\u0941\u0937\u094D\u0915\u0930 \u092E\u0947\u0932\u093E</p>
-                      <p className="text-xs text-gray-600 mt-1">Nov \u2022 Famous camel fair in Rajasthan with cultural programs and spiritual gatherings.</p>
+                      <h4 className="font-semibold text-yellow-500">{t.pushkarMela}</h4>
+                      <p className="text-xs text-gray-600 mt-1">Nov \u2022 {t.pushkarDesc}</p>
                     </div>
                   </div>
                   <div className="mt-4 pt-4 border-t border-heritage-beige/50">
-                    <button className="w-full btn-heritage-outline text-sm py-2 hover:bg-heritage-maroon hover:text-white transition-colors">View Festival Calendar</button>
+                    <button className="w-full btn-heritage-outline text-sm py-2 hover:bg-heritage-maroon hover:text-white transition-colors">{t.viewFestivalCalendar}</button>
                   </div>
                 </div>
 
                 <div className="card-heritage p-6 bg-gradient-to-br from-blue-50 to-indigo-50">
-                  <h3 className="text-lg font-semibold mb-3 text-gray-800">Weather in Delhi</h3>
+                  <h3 className="text-lg font-semibold mb-3 text-gray-800">{t.weatherInDelhi}</h3>
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-2xl font-bold text-gray-800">23\u00B0C</p>
-                      <p className="text-sm text-gray-600">Pleasant & Clear</p>
-                      <p className="text-heritage-gold font-hindi text-sm">\u0938\u0941\u0939\u093E\u0935\u0928\u093E \u092E\u094C\u0938\u092E</p>
+                      <p className="text-sm text-gray-600">{t.pleasantClear}</p>
                     </div>
                     <div className="text-4xl">\u2600\uFE0F</div>
                   </div>
-                  <p className="text-sm text-gray-600 mt-3">Perfect weather for heritage site visits and outdoor cultural events!</p>
+                  <p className="text-sm text-gray-600 mt-3">{t.perfectWeatherMsg}</p>
                 </div>
               </div>
             </div>
 
             <div className="card-heritage p-8">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-semibold text-gray-800">Curated for You</h2>
-                <span className="text-heritage-gold font-hindi">\u0906\u092A\u0915\u0947 \u0932\u093F\u090F \u091A\u0941\u0928\u093E \u0939\u0941\u0906</span>
+                <h2 className="text-2xl font-semibold text-gray-800">{t.curatedForYou}</h2>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <motion.div whileHover={{ scale: 1.02 }} className="border border-heritage-beige rounded-2xl p-6 hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-white to-heritage-beige/20">
                   <div className="flex items-center mb-4">
                     <span className="text-3xl mr-3">🏛️</span>
                     <div>
-                      <h3 className="font-semibold text-heritage-maroon">Golden Triangle Tour</h3>
-                      <p className="text-heritage-gold font-hindi text-sm">\u0938\u094D\u0935\u0930\u094D\u0923 \u0924\u094D\u0930\u093F\u0915\u094B\u0923 \u092F\u093E\u0924\u094D\u0930\u093E</p>
+                      <h3 className="font-semibold text-heritage-maroon">{t.goldenTriangleTour}</h3>
                     </div>
                   </div>
-                  <p className="text-sm text-gray-600 mb-4">5-day tour covering Delhi, Agra & Jaipur with expert heritage guides</p>
+                  <p className="text-sm text-gray-600 mb-4">{t.goldenTriangleDesc}</p>
                   <div className="flex justify-between items-center">
                     <span className="text-heritage-bronze font-bold text-lg">\u20B918,500</span>
-                    <button className="btn-heritage text-sm px-4 py-2">Book Now</button>
+                    <button className="btn-heritage text-sm px-4 py-2">{t.bookNow}</button>
                   </div>
                 </motion.div>
 
@@ -346,14 +346,13 @@ export default function Dashboard() {
                   <div className="flex items-center mb-4">
                     <span className="text-3xl mr-3">🪔</span>
                     <div>
-                      <h3 className="font-semibold text-heritage-maroon">Varanasi Spiritual Journey</h3>
-                      <p className="text-heritage-gold font-hindi text-sm">\u0935\u093E\u0930\u093E\u0923\u0938\u0940 \u0906\u0927\u094D\u092F\u093E\u0924\u094D\u092E\u093F\u0915 \u092F\u093E\u0924\u094D\u0930\u093E</p>
+                      <h3 className="font-semibold text-heritage-maroon">{t.varanasiSpiritual}</h3>
                     </div>
                   </div>
-                  <p className="text-sm text-gray-600 mb-4">3-day spiritual experience with Ganga Aarti and temple visits</p>
+                  <p className="text-sm text-gray-600 mb-4">{t.varanasiDesc}</p>
                   <div className="flex justify-between items-center">
                     <span className="text-heritage-bronze font-bold text-lg">\u20B98,500</span>
-                    <button className="btn-heritage text-sm px-4 py-2">Book Now</button>
+                    <button className="btn-heritage text-sm px-4 py-2">{t.bookNow}</button>
                   </div>
                 </motion.div>
 
@@ -361,14 +360,13 @@ export default function Dashboard() {
                   <div className="flex items-center mb-4">
                     <span className="text-3xl mr-3">🎵</span>
                     <div>
-                      <h3 className="font-semibold text-heritage-maroon">Rajasthani Folk Night</h3>
-                      <p className="text-heritage-gold font-hindi text-sm">\u0930\u093E\u091C\u0938\u094D\u0925\u093E\u0928\u0940 \u0932\u094B\u0915 \u0938\u0902\u0917\u0940\u0924</p>
+                      <h3 className="font-semibold text-heritage-maroon">{t.rajasthaniFolkNight}</h3>
                     </div>
                   </div>
-                  <p className="text-sm text-gray-600 mb-4">Evening of traditional Rajasthani music and dance at a desert camp</p>
+                  <p className="text-sm text-gray-600 mb-4">{t.folkNightDesc}</p>
                   <div className="flex justify-between items-center">
                     <span className="text-heritage-bronze font-bold text-lg">\u20B92,750</span>
-                    <button className="btn-heritage text-sm px-4 py-2">Book Now</button>
+                    <button className="btn-heritage text-sm px-4 py-2">{t.bookNow}</button>
                   </div>
                 </motion.div>
               </div>
@@ -384,14 +382,14 @@ export default function Dashboard() {
       case 'heritage':
         return (
           <div className="space-y-8">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h1 className="text-4xl font-heritage font-bold text-heritage-maroon">Heritage Sights</h1>
-                <p className="text-heritage-gold font-hindi text-lg">\u0910\u0924\u093F\u0939\u093E\u0938\u093F\u0915 \u0926\u0930\u094D\u0936\u0928\u0940\u092F \u0938\u094D\u0925\u0932</p>
+                <h1 className="text-3xl sm:text-4xl font-heritage font-bold text-heritage-maroon">{t.heritageSights}</h1>
+                <p className="text-heritage-gold text-lg">{t.heritageSubtitleHindi}</p>
               </div>
               <div className="flex items-center space-x-4">
                 <select className="px-4 py-2 border border-heritage-bronze/30 rounded-xl focus:border-heritage-maroon">
-                  <option>All States</option>
+                  <option>{t.allStates}</option>
                   <option>Uttar Pradesh</option>
                   <option>Rajasthan</option>
                   <option>Karnataka</option>
@@ -399,7 +397,7 @@ export default function Dashboard() {
                   <option>Kerala</option>
                   <option>Maharashtra</option>
                 </select>
-                <button className="btn-heritage">Add to Wishlist</button>
+                <button className="btn-heritage">{t.addToWishlist}</button>
               </div>
             </div>
 
@@ -434,7 +432,7 @@ export default function Dashboard() {
                     <div className="mb-4"><div className="flex flex-wrap gap-1">{site.highlights.slice(0, 3).map((h, i) => (<span key={i} className="text-xs bg-heritage-beige text-heritage-maroon px-2 py-1 rounded-full">{h}</span>))}</div></div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-gray-500 flex items-center"><Clock size={16} className="mr-1" />{site.timeNeeded}</span>
-                      <button className="btn-heritage-outline text-sm px-6 py-2 hover:bg-heritage-maroon hover:text-white transition-colors">Explore</button>
+                      <button className="btn-heritage-outline text-sm px-6 py-2 hover:bg-heritage-maroon hover:text-white transition-colors">{t.explore}</button>
                     </div>
                   </div>
                 </motion.div>
@@ -443,10 +441,10 @@ export default function Dashboard() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
               {[
-                { name: 'Temples & Monuments', count: '50+', icon: '\u{1F3DB}\uFE0F', color: 'from-red-500 to-red-700' },
-                { name: 'Forts & Palaces', count: '30+', icon: '\u{1F3F0}', color: 'from-blue-500 to-blue-700' },
-                { name: 'Museums & Galleries', count: '25+', icon: '\u{1F3A8}', color: 'from-green-500 to-green-700' },
-                { name: 'UNESCO World Heritage', count: '40+', icon: '\u{1F4DC}', color: 'from-purple-500 to-purple-700' },
+                { name: t.templesMonuments, count: '50+', icon: '\u{1F3DB}\uFE0F', color: 'from-red-500 to-red-700' },
+                { name: t.fortsPalaces, count: '30+', icon: '\u{1F3F0}', color: 'from-blue-500 to-blue-700' },
+                { name: t.museumsGalleries, count: '25+', icon: '\u{1F3A8}', color: 'from-green-500 to-green-700' },
+                { name: t.unescoWorldHeritage, count: '40+', icon: '\u{1F4DC}', color: 'from-purple-500 to-purple-700' },
               ].map((category) => (
                 <motion.div key={category.name} whileHover={{ scale: 1.05 }} className="card-heritage p-6 text-center cursor-pointer group">
                   <div className={`w-16 h-16 bg-gradient-to-r ${category.color} rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform`}>
@@ -460,9 +458,9 @@ export default function Dashboard() {
 
             <div className="mt-16">
               <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold text-heritage-maroon mb-2">Hidden Gems of India</h2>
-                <p className="text-heritage-gold font-hindi text-lg">\u092D\u093E\u0930\u0924 \u0915\u0947 \u091B\u0941\u092A\u0947 \u0930\u0924\u094D\u0928</p>
-                <p className="text-gray-600 mt-2">Discover the lesser-known heritage treasures across India</p>
+                <h2 className="text-3xl font-bold text-heritage-maroon mb-2">{t.hiddenGemsTitle}</h2>
+                <p className="text-heritage-gold font-hindi text-lg">{t.hiddenGemsHindi}</p>
+                <p className="text-gray-600 mt-2">{t.hiddenGemsSubtitle}</p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {[
@@ -487,7 +485,7 @@ export default function Dashboard() {
                       <div className="flex flex-wrap gap-1 mb-3">{place.highlights.map((h, i) => (<span key={i} className="text-xs bg-heritage-beige text-heritage-maroon px-2 py-1 rounded-full">{h}</span>))}</div>
                       <div className="bg-gradient-to-r from-heritage-gold/10 to-heritage-bronze/10 p-2 rounded-lg"><p className="text-xs text-heritage-maroon font-semibold">\u2728 {place.uniqueness}</p></div>
                     </div>
-                    <button className="btn-heritage-outline w-full text-sm py-2 hover:bg-heritage-maroon hover:text-white transition-colors">Discover Hidden Gem</button>
+                    <button className="btn-heritage-outline w-full text-sm py-2 hover:bg-heritage-maroon hover:text-white transition-colors">{t.discoverHiddenGem}</button>
                   </motion.div>
                 ))}
               </div>
@@ -500,11 +498,11 @@ export default function Dashboard() {
           <div className="space-y-8">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-4xl font-heritage font-bold text-heritage-maroon">Weather Information</h1>
-                <p className="text-heritage-gold font-hindi text-lg">\u092E\u094C\u0938\u092E \u0915\u0940 \u091C\u093E\u0928\u0915\u093E\u0930\u0940 - Travel Planning Made Easy</p>
+                <h1 className="text-4xl font-heritage font-bold text-heritage-maroon">{t.weatherInfo}</h1>
+                <p className="text-heritage-gold text-lg">{t.weatherHindi}</p>
               </div>
               <div className="text-sm text-gray-600">
-                <span className="font-hindi">\u0905\u092A\u0921\u0947\u091F: </span>
+                <span>{t.update}</span>
                 {new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}
               </div>
             </div>
@@ -519,45 +517,45 @@ export default function Dashboard() {
             </div>
             <div className="card-heritage p-6">
               <h3 className="text-xl font-heritage font-bold text-heritage-maroon mb-4">
-                Travel Weather Tips <span className="text-heritage-gold font-hindi text-lg ml-3">\u092F\u093E\u0924\u094D\u0930\u093E \u092E\u094C\u0938\u092E \u0938\u0941\u091D\u093E\u0935</span>
+                {t.travelWeatherTips}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                  <div className="text-green-600 font-semibold mb-2">🌞 Excellent Weather</div>
-                  <div className="text-sm text-green-700"><p>15-28\u00B0C, Clear skies</p><p className="font-hindi mt-1">\u0909\u0924\u094D\u0924\u092E \u092E\u094C\u0938\u092E</p></div>
-                  <div className="text-xs text-green-600 mt-2">Perfect for heritage sites, photography, walking tours</div>
+                  <div className="text-green-600 font-semibold mb-2">🌞 {t.excellentWeather}</div>
+                  <div className="text-sm text-green-700"><p>{t.excellentTemp}</p></div>
+                  <div className="text-xs text-green-600 mt-2">{t.excellentTips}</div>
                 </div>
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <div className="text-blue-600 font-semibold mb-2">🌤️ Good Weather</div>
-                  <div className="text-sm text-blue-700"><p>10-35\u00B0C, Partly cloudy</p><p className="font-hindi mt-1">\u0905\u091A\u094D\u091B\u093E \u092E\u094C\u0938\u092E</p></div>
-                  <div className="text-xs text-blue-600 mt-2">Great for museums, cultural events, indoor attractions</div>
+                  <div className="text-blue-600 font-semibold mb-2">🌤️ {t.goodWeather}</div>
+                  <div className="text-sm text-blue-700"><p>{t.goodTemp}</p></div>
+                  <div className="text-xs text-blue-600 mt-2">{t.goodTips}</div>
                 </div>
                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                  <div className="text-yellow-600 font-semibold mb-2">\u26C5 Fair Weather</div>
-                  <div className="text-sm text-yellow-700"><p>5-40\u00B0C, Mixed conditions</p><p className="font-hindi mt-1">\u0938\u093E\u092E\u093E\u0928\u094D\u092F \u092E\u094C\u0938\u092E</p></div>
-                  <div className="text-xs text-yellow-600 mt-2">Indoor activities recommended, flexible planning needed</div>
+                  <div className="text-yellow-600 font-semibold mb-2">\u26C5 {t.fairWeather}</div>
+                  <div className="text-sm text-yellow-700"><p>{t.fairTemp}</p></div>
+                  <div className="text-xs text-yellow-600 mt-2">{t.fairTips}</div>
                 </div>
                 <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                  <div className="text-red-600 font-semibold mb-2">🌧️ Poor Weather</div>
-                  <div className="text-sm text-red-700"><p>Extreme conditions</p><p className="font-hindi mt-1">\u0916\u0930\u093E\u092C \u092E\u094C\u0938\u092E</p></div>
-                  <div className="text-xs text-red-600 mt-2">Consider postponing outdoor activities, stay indoors</div>
+                  <div className="text-red-600 font-semibold mb-2">🌧️ {t.poorWeather}</div>
+                  <div className="text-sm text-red-700"><p>{t.poorTemp}</p></div>
+                  <div className="text-xs text-red-600 mt-2">{t.poorTips}</div>
                 </div>
               </div>
               <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4">
-                  <h4 className="font-semibold text-blue-800 mb-2">🌨️ Winter (Dec-Feb)</h4>
-                  <p className="text-sm text-blue-700 mb-2 font-hindi">\u0938\u0930\u094D\u0926\u0940 - \u0938\u092C\u0938\u0947 \u0905\u091A\u094D\u091B\u093E \u0938\u092E\u092F</p>
-                  <ul className="text-xs text-blue-600 space-y-1"><li>\u2022 Perfect for Rajasthan, South India</li><li>\u2022 Temperature: 5-25\u00B0C across regions</li><li>\u2022 Best for heritage tours</li><li>\u2022 Ideal for hill stations</li></ul>
+                  <h4 className="font-semibold text-blue-800 mb-2">🌨️ {t.winterSeason}</h4>
+                  <p className="text-sm text-blue-700 mb-2">{t.winterHindi}</p>
+                  <ul className="text-xs text-blue-600 space-y-1"><li>\u2022 {t.winterTip1}</li><li>\u2022 {t.winterTip2}</li><li>\u2022 {t.winterTip3}</li><li>\u2022 {t.winterTip4}</li></ul>
                 </div>
                 <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4">
-                  <h4 className="font-semibold text-green-800 mb-2">🌸 Spring (Mar-May)</h4>
-                  <p className="text-sm text-green-700 mb-2 font-hindi">\u0935\u0938\u0902\u0924 - \u092B\u0942\u0932\u094B\u0902 \u0915\u093E \u0938\u092E\u092F</p>
-                  <ul className="text-xs text-green-600 space-y-1"><li>\u2022 Warm but pleasant mornings</li><li>\u2022 Temperature: 20-40\u00B0C</li><li>\u2022 Great for Himalayan regions</li><li>\u2022 Holi & spring festivals</li></ul>
+                  <h4 className="font-semibold text-green-800 mb-2">🌸 {t.springSeason}</h4>
+                  <p className="text-sm text-green-700 mb-2">{t.springHindi}</p>
+                  <ul className="text-xs text-green-600 space-y-1"><li>\u2022 {t.springTip1}</li><li>\u2022 {t.springTip2}</li><li>\u2022 {t.springTip3}</li><li>\u2022 {t.springTip4}</li></ul>
                 </div>
                 <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg p-4">
-                  <h4 className="font-semibold text-gray-800 mb-2">🌧️ Monsoon (Jun-Sep)</h4>
-                  <p className="text-sm text-gray-700 mb-2 font-hindi">\u092C\u0930\u0938\u093E\u0924 - \u092C\u093E\u0930\u093F\u0936 \u0915\u093E \u0938\u092E\u092F</p>
-                  <ul className="text-xs text-gray-600 space-y-1"><li>\u2022 Lush green landscapes</li><li>\u2022 Temperature: 25-35\u00B0C</li><li>\u2022 Kerala & Northeast ideal</li><li>\u2022 Waterfalls at their best</li></ul>
+                  <h4 className="font-semibold text-gray-800 mb-2">🌧️ {t.monsoonSeason}</h4>
+                  <p className="text-sm text-gray-700 mb-2">{t.monsoonHindi}</p>
+                  <ul className="text-xs text-gray-600 space-y-1"><li>\u2022 {t.monsoonTip1}</li><li>\u2022 {t.monsoonTip2}</li><li>\u2022 {t.monsoonTip3}</li><li>\u2022 {t.monsoonTip4}</li></ul>
                 </div>
               </div>
             </div>
@@ -569,8 +567,8 @@ export default function Dashboard() {
           <div className="space-y-8">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-4xl font-heritage font-bold text-heritage-maroon">Local Guides</h1>
-                <p className="text-heritage-gold font-hindi text-lg">\u0938\u094D\u0925\u093E\u0928\u0940\u092F \u0917\u093E\u0907\u0921</p>
+                <h1 className="text-4xl font-heritage font-bold text-heritage-maroon">{t.localGuides}</h1>
+                <p className="text-heritage-gold text-lg">{t.localGuidesHindi}</p>
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -593,19 +591,19 @@ export default function Dashboard() {
                     <p className="text-heritage-maroon font-medium">{guide.specialty}</p>
                   </div>
                   <div className="space-y-3 mb-6">
-                    <div className="flex justify-between"><span className="text-gray-600">Experience:</span><span className="font-semibold">{guide.experience}</span></div>
-                    <div className="flex justify-between"><span className="text-gray-600">Rating:</span><div className="flex items-center"><Star className="w-4 h-4 fill-heritage-gold text-heritage-gold mr-1" /><span className="font-semibold">{guide.rating}</span><span className="text-gray-500 text-sm ml-1">({guide.reviews})</span></div></div>
-                    <div className="flex justify-between"><span className="text-gray-600">Price:</span><span className="font-bold text-heritage-maroon">{guide.price}</span></div>
+                    <div className="flex justify-between"><span className="text-gray-600">{t.experience}</span><span className="font-semibold">{guide.experience}</span></div>
+                    <div className="flex justify-between"><span className="text-gray-600">{t.rating}</span><div className="flex items-center"><Star className="w-4 h-4 fill-heritage-gold text-heritage-gold mr-1" /><span className="font-semibold">{guide.rating}</span><span className="text-gray-500 text-sm ml-1">({guide.reviews})</span></div></div>
+                    <div className="flex justify-between"><span className="text-gray-600">{t.price}</span><span className="font-bold text-heritage-maroon">{guide.price}</span></div>
                   </div>
                   <div className="mb-4">
                     <p className="text-gray-600 text-sm mb-3">{guide.description}</p>
-                    <div className="mb-3"><span className="text-xs text-gray-500 mb-1 block">Coverage Areas:</span><div className="flex flex-wrap gap-1 mb-2">{guide.areas.map((a, i) => (<span key={i} className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">{a}</span>))}</div></div>
+                    <div className="mb-3"><span className="text-xs text-gray-500 mb-1 block">{t.coverageAreas}</span><div className="flex flex-wrap gap-1 mb-2">{guide.areas.map((a, i) => (<span key={i} className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">{a}</span>))}</div></div>
                     <div className="flex flex-wrap gap-1 mb-3">{guide.languages.map((l, i) => (<span key={i} className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">{l}</span>))}</div>
                     <div className="flex flex-wrap gap-1">{guide.achievements.map((a, i) => (<span key={i} className="text-xs bg-heritage-beige text-heritage-maroon px-2 py-1 rounded-full">{a}</span>))}</div>
                   </div>
                   <div className="flex space-x-2">
-                    <button className="flex-1 btn-heritage-outline text-sm py-2">View Profile</button>
-                    <button className="flex-1 btn-heritage text-sm py-2">Book Now</button>
+                    <button className="flex-1 btn-heritage-outline text-sm py-2">{t.viewProfile}</button>
+                    <button className="flex-1 btn-heritage text-sm py-2">{t.bookNow}</button>
                   </div>
                 </motion.div>
               ))}
@@ -618,8 +616,8 @@ export default function Dashboard() {
           <div className="space-y-8">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-4xl font-heritage font-bold text-heritage-maroon">Heritage Hotels</h1>
-                <p className="text-heritage-gold font-hindi text-lg">\u0935\u093F\u0930\u093E\u0938\u0924 \u0939\u094B\u091F\u0932</p>
+                <h1 className="text-4xl font-heritage font-bold text-heritage-maroon">{t.heritageHotels}</h1>
+                <p className="text-heritage-gold font-hindi text-lg">{t.heritageHotelsHindi}</p>
               </div>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -630,9 +628,9 @@ export default function Dashboard() {
                 { name: 'Neemrana Fort Palace', hindi: '\u0928\u0940\u092E\u0930\u093E\u0923\u093E \u0915\u093F\u0932\u093E \u092E\u0939\u0932', category: 'Fort Hotel', location: 'Neemrana, Rajasthan', rating: 4.6, price: '\u20B98,500', image: '\u{1F3E0}', amenities: ['Fort Heritage', 'Zip-lining', 'Cultural Evenings', 'Pool'], description: '15th-century fort palace with panoramic Aravalli views' }
               ].map((hotel, index) => (
                 <motion.div key={hotel.name} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }} className="card-heritage overflow-hidden hover:shadow-2xl transition-all duration-300">
-                  <div className="flex">
-                    <div className="w-1/3 bg-gradient-to-br from-heritage-beige to-heritage-bronze flex items-center justify-center text-6xl">{hotel.image}</div>
-                    <div className="flex-1 p-6">
+                  <div className="flex flex-col sm:flex-row">
+                    <div className="w-full sm:w-1/3 h-36 sm:h-auto bg-gradient-to-br from-heritage-beige to-heritage-bronze flex items-center justify-center text-6xl">{hotel.image}</div>
+                    <div className="flex-1 p-4 sm:p-6">
                       <div className="flex justify-between items-start mb-4">
                         <div>
                           <h3 className="text-xl font-semibold text-gray-800">{hotel.name}</h3>
@@ -641,15 +639,15 @@ export default function Dashboard() {
                         </div>
                         <div className="text-right">
                           <div className="flex items-center"><Star className="w-4 h-4 fill-heritage-gold text-heritage-gold mr-1" /><span className="font-semibold">{hotel.rating}</span></div>
-                          <p className="text-heritage-maroon font-bold text-lg">{hotel.price}/night</p>
+                          <p className="text-heritage-maroon font-bold text-lg">{hotel.price}/{t.perNight}</p>
                         </div>
                       </div>
                       <p className="text-gray-600 text-sm mb-4">{hotel.description}</p>
                       <p className="text-gray-500 text-sm mb-4 flex items-center"><MapPin size={16} className="mr-1" />{hotel.location}</p>
                       <div className="flex flex-wrap gap-1 mb-4">{hotel.amenities.map((a, i) => (<span key={i} className="text-xs bg-heritage-beige text-heritage-maroon px-2 py-1 rounded-full">{a}</span>))}</div>
                       <div className="flex space-x-3">
-                        <button className="flex-1 btn-heritage-outline text-sm py-2">View Details</button>
-                        <button className="flex-1 btn-heritage text-sm py-2">Book Now</button>
+                        <button className="flex-1 btn-heritage-outline text-sm py-2">{t.viewDetails}</button>
+                        <button className="flex-1 btn-heritage text-sm py-2">{t.bookNow}</button>
                       </div>
                     </div>
                   </div>
@@ -664,8 +662,8 @@ export default function Dashboard() {
           <div className="space-y-8">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-4xl font-heritage font-bold text-heritage-maroon">Indian Cuisine</h1>
-                <p className="text-heritage-gold font-hindi text-lg">\u092D\u093E\u0930\u0924\u0940\u092F \u0935\u094D\u092F\u0902\u091C\u0928 \u0914\u0930 \u0938\u0902\u0938\u094D\u0915\u0943\u0924\u093F</p>
+                <h1 className="text-4xl font-heritage font-bold text-heritage-maroon">{t.indianCuisine}</h1>
+                <p className="text-heritage-gold font-hindi text-lg">{t.indianCuisineHindi}</p>
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -684,7 +682,7 @@ export default function Dashboard() {
               ))}
             </div>
             <div>
-              <h2 className="text-2xl font-semibold mb-6 text-gray-800">Recommended Restaurants <span className="text-heritage-gold font-hindi">\u0905\u0928\u0941\u0936\u0902\u0938\u093F\u0924 \u0930\u0947\u0938\u094D\u0924\u0930\u093E\u0902</span></h2>
+              <h2 className="text-2xl font-semibold mb-6 text-gray-800">{t.recommendedRestaurants} <span className="text-heritage-gold font-hindi">{t.recRestHindi}</span></h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {[
                   { name: 'Bukhara, ITC Maurya', specialty: 'Frontier Cuisine', signature: 'Dal Bukhara, Tandoori Raan', price: '\u20B9\u20B9\u20B9\u20B9', rating: 4.8, location: 'New Delhi' },
@@ -697,9 +695,9 @@ export default function Dashboard() {
                       <div><h3 className="text-lg font-semibold text-gray-800">{restaurant.name}</h3><p className="text-heritage-maroon text-sm">{restaurant.specialty}</p></div>
                       <div className="text-right"><div className="flex items-center"><Star className="w-4 h-4 fill-heritage-gold text-heritage-gold mr-1" /><span className="font-semibold">{restaurant.rating}</span></div><p className="text-heritage-bronze font-bold">{restaurant.price}</p></div>
                     </div>
-                    <p className="text-gray-600 text-sm mb-2">Signature: {restaurant.signature}</p>
+                    <p className="text-gray-600 text-sm mb-2">{t.signature}: {restaurant.signature}</p>
                     <p className="text-gray-500 text-sm mb-4 flex items-center"><MapPin size={16} className="mr-1" />{restaurant.location}</p>
-                    <button className="btn-heritage-outline w-full text-sm py-2">View Menu & Book</button>
+                    <button className="btn-heritage-outline w-full text-sm py-2">{t.viewMenuBook}</button>
                   </motion.div>
                 ))}
               </div>
@@ -712,8 +710,8 @@ export default function Dashboard() {
           <div className="space-y-8">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-4xl font-heritage font-bold text-heritage-maroon">Cultural Events</h1>
-                <p className="text-heritage-gold font-hindi text-lg">\u0938\u093E\u0902\u0938\u094D\u0915\u0943\u0924\u093F\u0915 \u0915\u093E\u0930\u094D\u092F\u0915\u094D\u0930\u092E</p>
+                <h1 className="text-4xl font-heritage font-bold text-heritage-maroon">{t.culturalEvents}</h1>
+                <p className="text-heritage-gold font-hindi text-lg">{t.culturalEventsHindi}</p>
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -747,15 +745,15 @@ export default function Dashboard() {
                   </div>
                   <div className="mb-4"><div className="flex flex-wrap gap-1">{event.highlights.map((h, i) => (<span key={i} className="text-xs bg-heritage-beige text-heritage-maroon px-2 py-1 rounded-full">{h}</span>))}</div></div>
                   <div className="flex space-x-2">
-                    <button className="flex-1 btn-heritage-outline text-sm py-2 hover:bg-heritage-maroon hover:text-white transition-colors">Learn More</button>
-                    <button className="flex-1 btn-heritage text-sm py-2">Book Experience</button>
+                    <button className="flex-1 btn-heritage-outline text-sm py-2 hover:bg-heritage-maroon hover:text-white transition-colors">{t.learnMore}</button>
+                    <button className="flex-1 btn-heritage text-sm py-2">{t.bookExperience}</button>
                   </div>
                 </motion.div>
               ))}
             </div>
 
             <div className="mt-16">
-              <h2 className="text-3xl font-bold text-heritage-maroon mb-8 text-center">Explore India's Rich Cultural Heritage</h2>
+              <h2 className="text-3xl font-bold text-heritage-maroon mb-8 text-center">{t.exploreCulturalHeritage}</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {[
                   { name: 'Classical Arts', hindi: '\u0936\u093E\u0938\u094D\u0924\u094D\u0930\u0940\u092F \u0915\u0932\u093E', count: '20+ Events', icon: '\u{1F3AD}', color: 'from-purple-500 to-purple-700', description: 'Kathak, Bharatanatyam, Hindustani Music' },
@@ -778,7 +776,7 @@ export default function Dashboard() {
 
             <div className="mt-16 card-heritage p-8">
               <h2 className="text-2xl font-bold text-heritage-maroon mb-6 text-center">
-                Cultural Calendar <span className="text-heritage-gold font-hindi">\u0938\u093E\u0902\u0938\u094D\u0915\u0943\u0924\u093F\u0915 \u0915\u0948\u0932\u0947\u0902\u0921\u0930</span>
+                {t.culturalCalendar} <span className="text-heritage-gold font-hindi">{t.culturalCalendarHindi}</span>
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[
@@ -803,17 +801,99 @@ export default function Dashboard() {
       case 'itinerary':
         return <AIItineraryGenerator />
 
+      case 'ecommerce':
+        return (
+          <div className="space-y-8">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h1 className="text-3xl sm:text-4xl font-heritage font-bold text-heritage-maroon">{t.shoppingTitle}</h1>
+                <p className="text-heritage-gold text-sm sm:text-base">{t.shoppingSubtitle}</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[
+                { name: 'Banarasi Silk Saree', region: 'Varanasi, Uttar Pradesh', category: 'Handloom', price: '₹3,500 - ₹15,000', shipping: 'Pan-India delivery', note: 'Pure zari work, GI-tag craftsmanship', icon: '🧵' },
+                { name: 'Blue Pottery', region: 'Jaipur, Rajasthan', category: 'Handicraft', price: '₹450 - ₹4,000', shipping: '7-10 days', note: 'Hand-painted ceramic decor and utility pieces', icon: '🏺' },
+                { name: 'Pashmina Shawls', region: 'Srinagar, Kashmir', category: 'Textile', price: '₹2,000 - ₹18,000', shipping: 'Insured shipping available', note: 'Soft wool blends and authentic weave patterns', icon: '🧣' },
+                { name: 'Channapatna Toys', region: 'Karnataka', category: 'Woodcraft', price: '₹250 - ₹2,500', shipping: 'Eco packaging', note: 'Natural dyes and safe lacquer finish', icon: '🪀' },
+                { name: 'Madhubani Paintings', region: 'Mithila, Bihar', category: 'Folk Art', price: '₹700 - ₹12,000', shipping: 'Rolled tube shipping', note: 'Traditional storytelling motifs by local artists', icon: '🎨' },
+                { name: 'Kannauj Attar', region: 'Kannauj, Uttar Pradesh', category: 'Fragrance', price: '₹600 - ₹6,000', shipping: 'Fragile-safe packaging', note: 'Natural oil-based perfumes in classic blends', icon: '🌸' }
+              ].map((item, index) => (
+                <motion.div key={item.name} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.08 }} className="card-heritage p-6 hover:shadow-2xl transition-all duration-300">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="text-4xl">{item.icon}</div>
+                    <span className="text-xs bg-heritage-beige text-heritage-maroon px-3 py-1 rounded-full">{item.category}</span>
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-800 mb-1">{item.name}</h3>
+                  <p className="text-sm text-heritage-maroon mb-3 flex items-center"><MapPin size={14} className="mr-1" />{item.region}</p>
+                  <p className="text-sm text-gray-600 mb-4">{item.note}</p>
+                  <div className="space-y-2 mb-5">
+                    <div className="flex justify-between text-sm"><span className="text-gray-500">{t.priceRange}</span><span className="font-semibold text-heritage-maroon">{item.price}</span></div>
+                    <div className="flex justify-between text-sm"><span className="text-gray-500">{t.delivery}</span><span className="text-gray-700">{item.shipping}</span></div>
+                  </div>
+                  <button className="w-full btn-heritage text-sm py-2">{t.viewLocalSellers}</button>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        )
+
+      case 'packages':
+        return (
+          <div className="space-y-8">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h1 className="text-3xl sm:text-4xl font-heritage font-bold text-heritage-maroon">{t.packagesTitle}</h1>
+                <p className="text-heritage-gold text-sm sm:text-base">{t.packagesSubtitle}</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {[
+                { name: 'Royal Rajasthan Explorer', duration: '6 Days / 5 Nights', price: '₹29,900', cities: ['Jaipur', 'Jodhpur', 'Udaipur'], includes: ['3 Heritage Hotel stays', 'Local guide', 'Fort entry tickets', 'Cultural night'], bestFor: 'History & architecture lovers', icon: '👑' },
+                { name: 'Spiritual Varanasi Retreat', duration: '4 Days / 3 Nights', price: '₹14,800', cities: ['Varanasi', 'Sarnath'], includes: ['Ganga Aarti boat ride', 'Temple walk', 'Yoga session', 'Airport transfer'], bestFor: 'Spiritual travelers', icon: '🪔' },
+                { name: 'Kerala Culture & Backwaters', duration: '5 Days / 4 Nights', price: '₹24,500', cities: ['Kochi', 'Alleppey', 'Kumarakom'], includes: ['Houseboat stay', 'Kathakali show', 'Ayurveda massage', 'Local cuisine tour'], bestFor: 'Couples & family trips', icon: '🌴' },
+                { name: 'Golden Triangle Premium', duration: '5 Days / 4 Nights', price: '₹21,000', cities: ['Delhi', 'Agra', 'Jaipur'], includes: ['AC transport', '4-star hotels', 'Monument entries', 'Professional guide'], bestFor: 'First-time India visitors', icon: '🏛️' }
+              ].map((pkg, index) => (
+                <motion.div key={pkg.name} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.08 }} className="card-heritage p-6 hover:shadow-2xl transition-all duration-300">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="text-4xl">{pkg.icon}</div>
+                    <span className="text-sm font-semibold text-heritage-maroon">{pkg.duration}</span>
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-800 mb-1">{pkg.name}</h3>
+                  <p className="text-sm text-gray-500 mb-4">{t.bestFor}: {pkg.bestFor}</p>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {pkg.cities.map((city) => (
+                      <span key={city} className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">{city}</span>
+                    ))}
+                  </div>
+                  <ul className="space-y-1 mb-5">
+                    {pkg.includes.map((point) => (
+                      <li key={point} className="text-sm text-gray-600 flex items-start"><span className="text-heritage-maroon mr-2">•</span>{point}</li>
+                    ))}
+                  </ul>
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <span className="text-2xl font-bold text-heritage-bronze">{pkg.price}</span>
+                    <button className="btn-heritage text-sm py-2 px-5">{t.bookPackage}</button>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        )
+
       case 'settings':
         return (
           <div className="space-y-8">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h1 className="text-4xl font-heritage font-bold text-heritage-maroon">Settings</h1>
-                <p className="text-heritage-gold font-hindi text-lg">\u0938\u0947\u091F\u093F\u0902\u0917\u094D\u0938 \u0914\u0930 \u092A\u094D\u0930\u094B\u092B\u093E\u0907\u0932</p>
+                <h1 className="text-3xl sm:text-4xl font-heritage font-bold text-heritage-maroon">{t.settingsTitle}</h1>
+                <p className="text-heritage-gold font-hindi text-base sm:text-lg">{t.settingsSubtitle}</p>
               </div>
               {updateStatus === 'success' && (
                 <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className="bg-green-50 border border-green-200 rounded-xl px-4 py-2">
-                  <p className="text-green-800 text-sm">\u2705 Profile updated successfully!</p>
+                  <p className="text-green-800 text-sm">{t.profileUpdated}</p>
                 </motion.div>
               )}
             </div>
@@ -821,23 +901,23 @@ export default function Dashboard() {
               <div className="lg:col-span-2">
                 <div className="card-heritage p-8">
                   <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-2xl font-semibold text-gray-800">Profile Information</h2>
+                    <h2 className="text-2xl font-semibold text-gray-800">{t.profileInfo}</h2>
                     <button onClick={() => setIsEditingProfile(!isEditingProfile)} className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${isEditingProfile ? 'bg-gray-200 text-gray-700 hover:bg-gray-300' : 'btn-heritage'}`}>
-                      {isEditingProfile ? 'Cancel' : 'Edit Profile'}
+                      {isEditingProfile ? t.cancel : t.editProfile}
                     </button>
                   </div>
                   {isEditingProfile ? (
                     <form onSubmit={handleProfileUpdate} className="space-y-6">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div><label className="block text-heritage-maroon font-medium mb-2">Full Name *</label><input type="text" name="fullName" value={profileData.fullName} onChange={handleInputChange} required className="w-full px-4 py-3 rounded-xl border border-heritage-bronze/30 focus:border-heritage-maroon focus:ring-2 focus:ring-heritage-maroon/20 outline-none transition-all" placeholder="Your full name" /></div>
-                        <div><label className="block text-heritage-maroon font-medium mb-2">Phone Number</label><input type="tel" name="phone" value={profileData.phone} onChange={handleInputChange} className="w-full px-4 py-3 rounded-xl border border-heritage-bronze/30 focus:border-heritage-maroon focus:ring-2 focus:ring-heritage-maroon/20 outline-none transition-all" placeholder="+91 9876543210" /></div>
+                        <div><label className="block text-heritage-maroon font-medium mb-2">{t.fullName} *</label><input type="text" name="fullName" value={profileData.fullName} onChange={handleInputChange} required className="w-full px-4 py-3 rounded-xl border border-heritage-bronze/30 focus:border-heritage-maroon focus:ring-2 focus:ring-heritage-maroon/20 outline-none transition-all" placeholder={t.fullName} /></div>
+                        <div><label className="block text-heritage-maroon font-medium mb-2">{t.phoneNumber}</label><input type="tel" name="phone" value={profileData.phone} onChange={handleInputChange} className="w-full px-4 py-3 rounded-xl border border-heritage-bronze/30 focus:border-heritage-maroon focus:ring-2 focus:ring-heritage-maroon/20 outline-none transition-all" placeholder="+91 9876543210" /></div>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div><label className="block text-heritage-maroon font-medium mb-2">Date of Birth</label><input type="date" name="dateOfBirth" value={profileData.dateOfBirth} onChange={handleInputChange} className="w-full px-4 py-3 rounded-xl border border-heritage-bronze/30 focus:border-heritage-maroon focus:ring-2 focus:ring-heritage-maroon/20 outline-none transition-all" /></div>
-                        <div><label className="block text-heritage-maroon font-medium mb-2">City</label><input type="text" name="city" value={profileData.city} onChange={handleInputChange} className="w-full px-4 py-3 rounded-xl border border-heritage-bronze/30 focus:border-heritage-maroon focus:ring-2 focus:ring-heritage-maroon/20 outline-none transition-all" placeholder="New Delhi" /></div>
+                        <div><label className="block text-heritage-maroon font-medium mb-2">{t.dateOfBirth}</label><input type="date" name="dateOfBirth" value={profileData.dateOfBirth} onChange={handleInputChange} className="w-full px-4 py-3 rounded-xl border border-heritage-bronze/30 focus:border-heritage-maroon focus:ring-2 focus:ring-heritage-maroon/20 outline-none transition-all" /></div>
+                        <div><label className="block text-heritage-maroon font-medium mb-2">{t.city}</label><input type="text" name="city" value={profileData.city} onChange={handleInputChange} className="w-full px-4 py-3 rounded-xl border border-heritage-bronze/30 focus:border-heritage-maroon focus:ring-2 focus:ring-heritage-maroon/20 outline-none transition-all" placeholder={t.city} /></div>
                       </div>
                       <div>
-                        <label className="block text-heritage-maroon font-medium mb-2">Cultural Interests</label>
+                        <label className="block text-heritage-maroon font-medium mb-2">{t.culturalInterests}</label>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                           {['Heritage Sites', 'Classical Music', 'Folk Arts', 'Traditional Dance', 'Local Cuisine', 'Festivals', 'Handicrafts', 'Literature', 'Spiritual Tours'].map((interest) => (
                             <label key={interest} className="flex items-center space-x-2 cursor-pointer">
@@ -847,42 +927,42 @@ export default function Dashboard() {
                           ))}
                         </div>
                       </div>
-                      <div><label className="block text-heritage-maroon font-medium mb-2">Bio</label><textarea name="bio" value={profileData.bio} onChange={handleInputChange} rows={3} className="w-full px-4 py-3 rounded-xl border border-heritage-bronze/30 focus:border-heritage-maroon focus:ring-2 focus:ring-heritage-maroon/20 outline-none transition-all resize-none" placeholder="Tell us about yourself and your travel interests..." /></div>
+                      <div><label className="block text-heritage-maroon font-medium mb-2">{t.bio}</label><textarea name="bio" value={profileData.bio} onChange={handleInputChange} rows={3} className="w-full px-4 py-3 rounded-xl border border-heritage-bronze/30 focus:border-heritage-maroon focus:ring-2 focus:ring-heritage-maroon/20 outline-none transition-all resize-none" placeholder={t.bioPlaceholder} /></div>
                       <div className="flex space-x-4">
                         <button type="submit" disabled={updateStatus === 'loading'} className="flex-1 bg-gradient-to-r from-heritage-maroon to-heritage-bronze text-white py-3 px-6 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3">
-                          {updateStatus === 'loading' ? (<><div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />Updating...</>) : ('Save Changes')}
+                          {updateStatus === 'loading' ? (<><div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />{t.updating}</>) : (t.saveChanges)}
                         </button>
-                        <button type="button" onClick={() => setIsEditingProfile(false)} className="px-6 py-3 border border-heritage-bronze/30 text-heritage-maroon rounded-xl font-semibold hover:bg-heritage-beige transition-colors">Cancel</button>
+                        <button type="button" onClick={() => setIsEditingProfile(false)} className="px-6 py-3 border border-heritage-bronze/30 text-heritage-maroon rounded-xl font-semibold hover:bg-heritage-beige transition-colors">{t.cancel}</button>
                       </div>
                     </form>
                   ) : (
                     <div className="space-y-6">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div><h3 className="text-sm font-medium text-gray-500 mb-1">Full Name</h3><p className="text-gray-800">{profileData.fullName || 'Not provided'}</p></div>
-                        <div><h3 className="text-sm font-medium text-gray-500 mb-1">Email</h3><p className="text-gray-800">{profileData.email || 'Not provided'}</p></div>
-                        <div><h3 className="text-sm font-medium text-gray-500 mb-1">Phone</h3><p className="text-gray-800">{profileData.phone || 'Not provided'}</p></div>
-                        <div><h3 className="text-sm font-medium text-gray-500 mb-1">City</h3><p className="text-gray-800">{profileData.city || 'Not provided'}</p></div>
+                        <div><h3 className="text-sm font-medium text-gray-500 mb-1">{t.fullName}</h3><p className="text-gray-800">{profileData.fullName || t.notProvided}</p></div>
+                        <div><h3 className="text-sm font-medium text-gray-500 mb-1">{t.email}</h3><p className="text-gray-800">{profileData.email || t.notProvided}</p></div>
+                        <div><h3 className="text-sm font-medium text-gray-500 mb-1">{t.phone}</h3><p className="text-gray-800">{profileData.phone || t.notProvided}</p></div>
+                        <div><h3 className="text-sm font-medium text-gray-500 mb-1">{t.city}</h3><p className="text-gray-800">{profileData.city || t.notProvided}</p></div>
                       </div>
-                      <div><h3 className="text-sm font-medium text-gray-500 mb-1">Cultural Interests</h3><div className="flex flex-wrap gap-2">{profileData.culturalInterests.length > 0 ? profileData.culturalInterests.map((i, idx) => (<span key={idx} className="text-xs bg-heritage-beige text-heritage-maroon px-3 py-1 rounded-full">{i}</span>)) : <p className="text-gray-600">No interests selected</p>}</div></div>
-                      {profileData.bio && (<div><h3 className="text-sm font-medium text-gray-500 mb-1">Bio</h3><p className="text-gray-800">{profileData.bio}</p></div>)}
+                      <div><h3 className="text-sm font-medium text-gray-500 mb-1">{t.culturalInterests}</h3><div className="flex flex-wrap gap-2">{profileData.culturalInterests.length > 0 ? profileData.culturalInterests.map((i, idx) => (<span key={idx} className="text-xs bg-heritage-beige text-heritage-maroon px-3 py-1 rounded-full">{i}</span>)) : <p className="text-gray-600">{t.noInterests}</p>}</div></div>
+                      {profileData.bio && (<div><h3 className="text-sm font-medium text-gray-500 mb-1">{t.bio}</h3><p className="text-gray-800">{profileData.bio}</p></div>)}
                     </div>
                   )}
                 </div>
               </div>
               <div className="space-y-6">
                 <div className="card-heritage p-6">
-                  <h3 className="text-xl font-semibold mb-4 text-gray-800">Account Settings</h3>
+                  <h3 className="text-xl font-semibold mb-4 text-gray-800">{t.accountSettings}</h3>
                   <div className="space-y-3">
-                    <button className="w-full text-left p-3 rounded-lg hover:bg-heritage-beige transition-colors flex items-center justify-between"><span className="text-gray-700">Change Password</span><span className="text-heritage-maroon">\u2192</span></button>
-                    <button className="w-full text-left p-3 rounded-lg hover:bg-heritage-beige transition-colors flex items-center justify-between"><span className="text-gray-700">Email Preferences</span><span className="text-heritage-maroon">\u2192</span></button>
+                    <button className="w-full text-left p-3 rounded-lg hover:bg-heritage-beige transition-colors flex items-center justify-between"><span className="text-gray-700">{t.changePassword}</span><span className="text-heritage-maroon">\u2192</span></button>
+                    <button className="w-full text-left p-3 rounded-lg hover:bg-heritage-beige transition-colors flex items-center justify-between"><span className="text-gray-700">{t.emailPreferences}</span><span className="text-heritage-maroon">\u2192</span></button>
                   </div>
                 </div>
                 <div className="card-heritage p-6">
-                  <h3 className="text-xl font-semibold mb-4 text-gray-800">Preferences <span className="text-heritage-gold font-hindi text-sm">\u092A\u0938\u0902\u0926</span></h3>
+                  <h3 className="text-xl font-semibold mb-4 text-gray-800">{t.preferences}</h3>
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between"><span className="text-gray-700">Language</span><select className="px-3 py-1 border border-heritage-bronze/30 rounded-lg text-sm"><option>English</option><option>Hindi</option><option>Tamil</option><option>Bengali</option></select></div>
-                    <div className="flex items-center justify-between"><span className="text-gray-700">Currency</span><select className="px-3 py-1 border border-heritage-bronze/30 rounded-lg text-sm"><option>INR (\u20B9)</option><option>USD ($)</option></select></div>
-                    <div className="flex items-center justify-between"><span className="text-gray-700">Email Notifications</span><input type="checkbox" defaultChecked className="w-4 h-4 text-heritage-maroon border-heritage-bronze/30 rounded" /></div>
+                    <div className="flex items-center justify-between gap-3"><span className="text-gray-700">{t.language}</span><select value={language} onChange={(e) => setLanguage(e.target.value as AppLanguage)} className="px-3 py-1 border border-heritage-bronze/30 rounded-lg text-sm max-w-[170px] w-full">{languageOptions.map((option) => (<option key={option} value={option}>{option}</option>))}</select></div>
+                    <div className="flex items-center justify-between gap-3"><span className="text-gray-700">{t.currency}</span><select className="px-3 py-1 border border-heritage-bronze/30 rounded-lg text-sm max-w-[170px] w-full"><option>INR (\u20B9)</option><option>USD ($)</option></select></div>
+                    <div className="flex items-center justify-between"><span className="text-gray-700">{t.emailNotifications}</span><input type="checkbox" defaultChecked className="w-4 h-4 text-heritage-maroon border-heritage-bronze/30 rounded" /></div>
                   </div>
                 </div>
               </div>
@@ -897,18 +977,18 @@ export default function Dashboard() {
   return (
     <div ref={dashboardRef} className="min-h-screen bg-heritage-beige">
       <header className="bg-white shadow-sm border-b border-heritage-beige/30">
-        <div className="flex items-center justify-between px-4 py-4">
-          <div className="flex items-center space-x-4">
+        <div className="flex items-center justify-between px-3 sm:px-4 py-3 sm:py-4">
+          <div className="flex items-center space-x-2 sm:space-x-4">
             <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="lg:hidden p-2 text-gray-600 hover:text-heritage-maroon"><Menu size={24} /></button>
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-gradient-heritage rounded-lg flex items-center justify-center"><span className="text-white font-bold font-hindi">भ</span></div>
               <h1 className="text-xl font-heritage font-bold text-heritage-gradient">Bhraman</h1>
             </div>
           </div>
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 sm:space-x-4">
             <div className="relative hidden md:block">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-              <input type="text" placeholder="Search places, guides, experiences..." className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-heritage-maroon focus:border-transparent w-80" />
+              <input type="text" placeholder={t.searchPlaceholder} className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-heritage-maroon focus:border-transparent w-72 lg:w-80" />
             </div>
             <button className="p-2 text-gray-600 hover:text-heritage-maroon relative"><Bell size={24} /><span className="absolute -top-1 -right-1 w-5 h-5 bg-heritage-maroon text-white text-xs rounded-full flex items-center justify-center">3</span></button>
             <div className="flex items-center space-x-2">
@@ -920,10 +1000,10 @@ export default function Dashboard() {
       </header>
 
       <div className="flex">
-        <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'} flex flex-col h-full lg:h-screen`}>
+        <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-72 lg:w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'} flex flex-col h-full lg:h-screen`}>
           <div className="p-6 border-b border-heritage-beige/30 flex-shrink-0">
             <button onClick={() => setIsSidebarOpen(false)} className="lg:hidden absolute top-4 right-4 p-2 text-gray-600"><X size={20} /></button>
-            <h2 className="text-lg font-semibold text-gray-800">Dashboard</h2>
+            <h2 className="text-lg font-semibold text-gray-800">{t.dashboard}</h2>
           </div>
           <nav className="p-4 flex-1 overflow-y-auto">
             <ul className="space-y-2">
@@ -939,11 +1019,11 @@ export default function Dashboard() {
           </nav>
           <div className="p-4 border-t border-heritage-beige/30 flex-shrink-0 space-y-2">
             <button onClick={handleSignOut} className="w-full flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-heritage-beige hover:text-heritage-maroon rounded-lg transition-colors duration-200">
-              <LogOut size={20} /><span className="font-medium">Logout</span>
+              <LogOut size={20} /><span className="font-medium">{t.logout}</span>
             </button>
           </div>
         </aside>
-        <main className="flex-1 p-6 lg:p-8">{renderContent()}</main>
+        <main className="flex-1 p-4 sm:p-6 lg:p-8">{renderContent()}</main>
       </div>
 
       {isSidebarOpen && (<div className="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden" onClick={() => setIsSidebarOpen(false)} />)}

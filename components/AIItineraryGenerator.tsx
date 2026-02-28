@@ -128,9 +128,9 @@ export default function AIItineraryGenerator() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
         {/* Form Section */}
-        <div className="card-heritage p-6">
+        <div className="card-heritage p-4 sm:p-6">
           <h2 className="text-xl font-semibold text-heritage-maroon mb-6 flex items-center">
             <Sparkles className="mr-2" size={20} />
             Tell us about your dream trip
@@ -230,7 +230,7 @@ export default function AIItineraryGenerator() {
                 <Heart className="inline mr-1" size={16} />
                 Your Interests (Select multiple)
               </label>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {INTEREST_OPTIONS.map(interest => (
                   <label key={interest} className="flex items-center space-x-2 cursor-pointer">
                     <input
@@ -287,7 +287,7 @@ export default function AIItineraryGenerator() {
         </div>
 
         {/* Results Section */}
-        <div className="card-heritage p-6">
+        <div className="card-heritage p-4 sm:p-6">
           {!generatedItinerary ? (
             <div className="text-center py-12">
               <Brain className="mx-auto text-heritage-bronze opacity-50 mb-4" size={64} />
