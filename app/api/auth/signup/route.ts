@@ -14,16 +14,18 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    const userId = 'dev-user-' + Date.now()
+
     // Accept any credentials - no database check
     // Generate JWT token
     const token = signToken({
-      userId: 'dev-user-' + Date.now(),
+      userId,
       email: email
     })
 
     // Return mock user data
     const userData = {
-      id: 'dev-user-' + Date.now(),
+      id: userId,
       name: name,
       email: email,
       avatar: null,
