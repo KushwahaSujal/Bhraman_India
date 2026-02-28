@@ -50,7 +50,7 @@ export default function AuthPage() {
           setError('Failed to create account')
         }
       }
-    } catch (error) {
+    } catch {
       setError('An error occurred. Please try again.')
     } finally {
       setLoading(false)
@@ -113,10 +113,10 @@ export default function AuthPage() {
           {/* Header */}
           <div className="heritage-gradient p-6 text-center">
             <div className="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center mx-auto mb-4">
-              <span className="text-white font-bold text-2xl">ভ</span>
+              <span className="text-white font-bold text-2xl">भ</span>
             </div>
             <h1 className="text-2xl font-heritage font-bold text-white">
-              Welcome to Bhromon
+              Welcome to Bhraman
             </h1>
             <p className="text-heritage-beige mt-2">
               {isLogin ? 'Sign in to continue your journey' : 'Create your account to start exploring'}

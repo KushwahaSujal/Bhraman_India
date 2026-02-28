@@ -36,6 +36,7 @@ export async function GET(request: NextRequest) {
     console.error('Weather API error:', error)
     return NextResponse.json(
       { 
+        success: false,
         error: 'Failed to fetch weather data',
         details: error instanceof Error ? error.message : 'Unknown error'
       },

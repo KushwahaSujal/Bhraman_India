@@ -1,13 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import bcrypt from 'bcryptjs'
-import connectDB from '@/lib/mongodb'
-import { User } from '@/lib/models'
 import { signToken } from '@/lib/auth'
 
+// SIMPLE AUTH MODE: Accepts any credentials (for development)
 export async function POST(request: NextRequest) {
   try {
-    await connectDB()
-    
     const { name, email, password } = await request.json()
 
     // Validate input
@@ -18,46 +14,25 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    if (password.length < 6) {
-      return NextResponse.json(
-        { error: 'Password must be at least 6 characters long' },
-        { status: 400 }
-      )
-    }
-
-    // Check if user already exists
-    const existingUser = await User.findOne({ email })
-    if (existingUser) {
-      return NextResponse.json(
-        { error: 'User with this email already exists' },
-        { status: 409 }
-      )
-    }
-
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 12)
-
-    // Create user
-    const user = await User.create({
-      name,
-      email,
-      password: hashedPassword
-    })
-
+    // Accept any credentials - no database check
     // Generate JWT token
     const token = signToken({
-      userId: user._id.toString(),
-      email: user.email
+      userId: 'dev-user-' + Date.now(),
+      email: email
     })
 
-    // Return user data without password
+    // Return mock user data
     const userData = {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      avatar: user.avatar,
-      preferences: user.preferences,
-      isVerified: user.isVerified
+      id: 'dev-user-' + Date.now(),
+      name: name,
+      email: email,
+      avatar: null,
+      preferences: {
+        language: 'en',
+        currency: 'INR',
+        notifications: true
+      },
+      isVerified: true
     }
 
     return NextResponse.json({

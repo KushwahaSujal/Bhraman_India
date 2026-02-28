@@ -1,15 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import bcrypt from 'bcryptjs'
-import connectDB from '@/lib/mongodb'
-import { User } from '@/lib/models'
 import { signToken } from '@/lib/auth'
 
 export const dynamic = 'force-dynamic'
 
+// SIMPLE AUTH MODE: Accepts any credentials (for development)
 export async function POST(request: NextRequest) {
   try {
-    await connectDB()
-    
     const { email, password } = await request.json()
 
     // Validate input
@@ -20,38 +16,25 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Find user by email
-    const user = await User.findOne({ email })
-    if (!user) {
-      return NextResponse.json(
-        { error: 'Invalid email or password' },
-        { status: 401 }
-      )
-    }
-
-    // Check password
-    const isPasswordValid = await bcrypt.compare(password, user.password)
-    if (!isPasswordValid) {
-      return NextResponse.json(
-        { error: 'Invalid email or password' },
-        { status: 401 }
-      )
-    }
-
+    // Accept any credentials - no database check
     // Generate JWT token
     const token = signToken({
-      userId: user._id.toString(),
-      email: user.email
+      userId: 'dev-user-' + Date.now(),
+      email: email
     })
 
-    // Return user data without password
+    // Return mock user data
     const userData = {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      avatar: user.avatar,
-      preferences: user.preferences,
-      isVerified: user.isVerified
+      id: 'dev-user-' + Date.now(),
+      name: email.split('@')[0] || 'User',
+      email: email,
+      avatar: null,
+      preferences: {
+        language: 'en',
+        currency: 'INR',
+        notifications: true
+      },
+      isVerified: true
     }
 
     return NextResponse.json({

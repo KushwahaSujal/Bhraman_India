@@ -30,7 +30,7 @@ export default function AIChatAssistant({ isOpen, onToggle }: AIChatAssistantPro
     {
       id: '1',
       type: 'bot',
-      content: 'নমস্কার! Welcome to Bhromon! I\'m your AI travel assistant for West Bengal. How can I help you plan your perfect Bengali adventure today?',
+      content: 'नमस्ते! Welcome to Bhraman! I\'m your AI travel assistant for Incredible India. How can I help you plan your perfect Indian adventure today?',
       timestamp: new Date()
     }
   ])
@@ -69,7 +69,7 @@ export default function AIChatAssistant({ isOpen, onToggle }: AIChatAssistantPro
         },
         body: JSON.stringify({
           message: inputMessage,
-          context: 'West Bengal tourism assistant'
+          context: 'India tourism assistant'
         })
       })
 
@@ -83,7 +83,7 @@ export default function AIChatAssistant({ isOpen, onToggle }: AIChatAssistantPro
       }
 
       setMessages(prev => [...prev, botMessage])
-    } catch (error) {
+    } catch {
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: 'bot',
@@ -104,11 +104,11 @@ export default function AIChatAssistant({ isOpen, onToggle }: AIChatAssistantPro
   }
 
   const quickQuestions = [
-    "Best time to visit Darjeeling?",
-    "Traditional Bengali food recommendations",
-    "How to reach Sundarbans?",
-    "Cultural festivals in Kolkata",
-    "Budget for 5-day West Bengal trip"
+    "Best time to visit Rajasthan?",
+    "Traditional Indian food recommendations",
+    "How to reach Kerala backwaters?",
+    "Cultural festivals in India",
+    "Budget for 7-day India trip"
   ]
 
   const handleQuickQuestion = (question: string) => {
@@ -144,8 +144,8 @@ export default function AIChatAssistant({ isOpen, onToggle }: AIChatAssistantPro
         <div className="flex items-center space-x-2">
           <Bot size={20} />
           <div>
-            <h3 className="font-semibold">Bhromon AI Assistant</h3>
-            {!isMinimized && <p className="text-xs text-heritage-beige">Your West Bengal travel guide</p>}
+            <h3 className="font-semibold">Bhraman AI Assistant</h3>
+            {!isMinimized && <p className="text-xs text-heritage-beige">Your India travel guide</p>}
           </div>
         </div>
         <div className="flex items-center space-x-1">
@@ -247,7 +247,7 @@ export default function AIChatAssistant({ isOpen, onToggle }: AIChatAssistantPro
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Ask about West Bengal travel..."
+                placeholder="Ask about India travel..."
                 className="flex-1 px-3 py-2 border border-heritage-bronze/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-heritage-gold text-sm"
                 disabled={isLoading}
               />

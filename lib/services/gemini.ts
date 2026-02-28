@@ -2,10 +2,6 @@ import { GoogleGenerativeAI } from '@google/generative-ai'
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '')
 
-// Debug API key
-console.log('Gemini API Key configured:', !!process.env.GEMINI_API_KEY)
-console.log('API Key length:', process.env.GEMINI_API_KEY?.length || 0)
-
 export interface ItineraryRequest {
   destination: string
   duration: number // days
@@ -74,7 +70,7 @@ export interface ItineraryResponse {
   }
   packingList: string[]
   culturalTips: string[]
-  bengaliPhrases: {
+  hindiPhrases: {
     phrase: string
     pronunciation: string
     meaning: string
@@ -82,7 +78,7 @@ export interface ItineraryResponse {
   emergencyContacts: string[]
   recommendedGuides: {
     name: string
-    bengaliName: string
+    hindiName: string
     specialty: string
     experience: string
     rating: number
@@ -106,23 +102,20 @@ export interface TravelRecommendation {
   localCuisine: string[]
   travelTips: string[]
   nearbyAttractions: string[]
-  bengaliName: string
+  hindiName: string
   historicalContext: string
 }
 
 class GeminiService {
   private getModel() {
-    // Try to use the most appropriate model, with fallbacks
-    const models = ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-pro'];
-    
-    // For now, we'll start with the most reliable model
+    // Start with the most reliable model
     return genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
   }
 
-  // Generate personalized West Bengal itinerary
+  // Generate personalized India itinerary
   async generateItinerary(request: ItineraryRequest): Promise<ItineraryResponse> {
     const prompt = `
-    Create a comprehensive and detailed ${request.duration}-day travel itinerary for ${request.destination}, West Bengal, India.
+    Create a comprehensive and detailed ${request.duration}-day travel itinerary for ${request.destination}, India.
 
     Travel Details:
     - Budget Category: ${request.budget}
@@ -134,7 +127,7 @@ class GeminiService {
     Please provide a highly detailed itinerary in JSON format with the following structure:
     {
       "title": "Engaging title for the trip",
-      "overview": "Detailed 4-5 sentence overview highlighting unique West Bengal experiences",
+      "overview": "Detailed 4-5 sentence overview highlighting unique Indian experiences",
       "totalBudget": "Estimated total budget in INR with range",
       "dailyItinerary": [
         {
@@ -156,7 +149,7 @@ class GeminiService {
           "meals": {
             "breakfast": {
               "restaurant": "Specific restaurant name",
-              "dish": "Recommended Bengali dish",
+              "dish": "Recommended local dish",
               "cost": "Price range in INR",
               "address": "Complete address"
             },
@@ -168,7 +161,7 @@ class GeminiService {
             },
             "dinner": {
               "restaurant": "Specific restaurant name",
-              "dish": "Traditional Bengali dinner",
+              "dish": "Traditional regional dinner",
               "cost": "Price range in INR", 
               "address": "Complete address"
             }
@@ -194,9 +187,9 @@ class GeminiService {
       },
       "packingList": ["Detailed items for ${request.season} season and activities"],
       "culturalTips": ["Important etiquette, customs, and cultural insights"],
-      "bengaliPhrases": [
+      "hindiPhrases": [
         {
-          "phrase": "Essential Bengali phrase",
+          "phrase": "Essential Hindi phrase",
           "pronunciation": "Clear English pronunciation",
           "meaning": "English translation with context"
         }
@@ -205,7 +198,7 @@ class GeminiService {
       "recommendedGuides": [
         {
           "name": "Guide full name",
-          "bengaliName": "Name in Bengali script",
+          "hindiName": "Name in Devanagari script",
           "specialty": "Specific expertise area",
           "experience": "Years of experience",
           "rating": 4.8,
@@ -227,22 +220,22 @@ class GeminiService {
     2. Include exact restaurant names, addresses, and signature dishes
     3. Recommend 2-3 guides that match the traveler's interests and destination
     4. Provide realistic costs for ${request.budget} budget category
-    5. Include Bengali cultural elements throughout
-    6. Focus on authentic West Bengal experiences including:
+     5. Include Indian cultural elements throughout
+     6. Focus on authentic Indian experiences including:
        - Heritage architecture and historical sites
-       - Traditional Bengali festivals and cultural events
-       - Authentic Bengali cuisine (roshogolla, mishti doi, kathi rolls, etc.)
+       - Traditional Indian festivals and cultural events
+       - Authentic regional cuisines across India
        - Local artisan workshops and craft centers
-       - Natural attractions unique to West Bengal
+       - Natural attractions across different Indian regions
        - Spiritual and religious sites
-       - Literature and arts (Tagore heritage, Bengali cinema, etc.)
+       - Literature and arts from diverse Indian traditions
        - Local markets and shopping experiences
     7. Ensure all recommendations are practical and currently accessible
     8. Include seasonal considerations for ${request.season}
     9. Provide transportation details between locations
     10. Add safety tips and cultural sensitivity guidelines
 
-    Create an itinerary that showcases the rich heritage of পশ্চিমবঙ্গ (West Bengal) with deep cultural immersion.
+    Create an itinerary that showcases the rich heritage of भारत (India) with deep cultural immersion.
     
     RETURN ONLY THE JSON OBJECT, no additional text or formatting.
     `
@@ -291,7 +284,7 @@ class GeminiService {
   // Get detailed destination information
   async getDestinationInfo(destination: string): Promise<TravelRecommendation> {
     const prompt = `
-    Provide comprehensive travel information about ${destination}, West Bengal, India.
+    Provide comprehensive travel information about ${destination}, India.
 
     Return the information in JSON format:
     {
@@ -302,11 +295,11 @@ class GeminiService {
       "localCuisine": ["Must-try local dishes and specialties"],
       "travelTips": ["Practical travel advice"],
       "nearbyAttractions": ["Places to visit nearby"],
-      "bengaliName": "Name in Bengali script",
+      "hindiName": "Name in Devanagari script",
       "historicalContext": "Brief historical background"
     }
 
-    Focus on authentic, accurate information about West Bengal's rich cultural heritage.
+    Focus on authentic, accurate information about India's rich cultural heritage.
     `
 
     try {
@@ -330,7 +323,7 @@ class GeminiService {
   // Generate travel tips based on user preferences
   async getTravelTips(destination: string, travelStyle: string, season: string): Promise<string[]> {
     const prompt = `
-    Generate 8-10 practical travel tips for visiting ${destination}, West Bengal during ${season} season for a ${travelStyle} traveler.
+    Generate 8-10 practical travel tips for visiting ${destination}, India during ${season} season for a ${travelStyle} traveler.
     
     Include tips about:
     - Local customs and etiquette
@@ -361,8 +354,8 @@ class GeminiService {
       console.error('Gemini API error:', error)
       return [
         "Respect local customs and traditions",
-        "Try authentic Bengali cuisine",
-        "Learn basic Bengali phrases",
+        "Try authentic regional Indian cuisine",
+        "Learn basic Hindi phrases",
         "Carry cash for local markets",
         "Dress modestly when visiting religious sites"
       ]
@@ -372,13 +365,13 @@ class GeminiService {
   // Generate cultural event recommendations
   async getCulturalEvents(month: string): Promise<any[]> {
     const prompt = `
-    List cultural events, festivals, and celebrations happening in West Bengal during ${month}.
+    List cultural events, festivals, and celebrations happening across India during ${month}.
     
     Return as JSON array:
     [
       {
         "name": "Event name",
-        "bengaliName": "Bengali name",
+        "hindiName": "Hindi name",
         "date": "Approximate date/period",
         "location": "Where it's celebrated",
         "description": "Brief description",
@@ -412,7 +405,7 @@ class GeminiService {
   // Chat assistant for travel queries
   async chatAssistant(message: string, context?: string): Promise<string> {
     const prompt = `
-    You are a knowledgeable West Bengal tourism assistant. Answer the following question about travel in West Bengal, India:
+    You are a knowledgeable India tourism assistant. Answer the following question about travel in India:
     
     Question: ${message}
     ${context ? `Context: ${context}` : ''}
@@ -421,7 +414,7 @@ class GeminiService {
     - Practical travel advice
     - Cultural insights
     - Local recommendations
-    - Bengali heritage and traditions
+    - Indian heritage and traditions
     
     Keep the response conversational and informative, under 200 words.
     `

@@ -1,4 +1,4 @@
-# Bhromon - West Bengal Tourism Website
+# Bhraman - West Bengal Tourism Website
 
 ## Project Overview
 Full-stack Next.js application for West Bengal Tourism with heritage-inspired design, authentication, and comprehensive tourism features.

@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import WeatherCard from './WeatherCard'
 import { 
   MapPin, 
   RefreshCw, 
@@ -26,7 +25,7 @@ interface DestinationWeather {
   recommendation: {
     suitability: 'excellent' | 'good' | 'fair' | 'poor'
     message: string
-    bengaliMessage: string
+    hindiMessage: string
     activities: string[]
   }
 }
@@ -86,7 +85,7 @@ export default function DestinationsWeather() {
       <div className="bg-white rounded-xl p-6 shadow-lg">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-xl font-heritage font-bold text-heritage-maroon">
-            পশ্চিমবঙ্গের আবহাওয়া (West Bengal Weather)
+            भारत का मौसम (India Weather)
           </h3>
           <RefreshCw className="animate-spin text-heritage-gold" size={20} />
         </div>
@@ -128,9 +127,9 @@ export default function DestinationsWeather() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h3 className="text-xl font-heritage font-bold text-heritage-maroon mb-1">
-            পশ্চিমবঙ্গের আবহাওয়া
+            भारत का मौसम
           </h3>
-          <p className="text-sm text-gray-600">West Bengal Weather Conditions</p>
+          <p className="text-sm text-gray-600">India Weather Conditions</p>
         </div>
         <button
           onClick={fetchDestinationsWeather}
@@ -155,7 +154,7 @@ export default function DestinationsWeather() {
               <div className="flex items-center space-x-2">
                 <MapPin size={14} className="text-heritage-gold" />
                 <h4 className="font-medium text-heritage-maroon text-sm">
-                  {destination.location.replace(', West Bengal', '')}
+                  {destination.location.replace(', India', '').replace(/, .*$/, '')}
                 </h4>
               </div>
               {getWeatherIcon(destination.current.condition.text)}
@@ -190,9 +189,9 @@ export default function DestinationsWeather() {
               </div>
             </div>
 
-            {/* Bengali Message */}
-            <div className="mt-2 text-xs text-heritage-maroon font-noto-bengali">
-              {destination.recommendation.bengaliMessage}
+            {/* Hindi Message */}
+            <div className="mt-2 text-xs text-heritage-maroon font-hindi min-h-[32px] leading-relaxed">
+              {destination.recommendation.hindiMessage || destination.recommendation.message}
             </div>
 
             {/* Activities Preview */}
@@ -202,7 +201,7 @@ export default function DestinationsWeather() {
                 {destination.recommendation.activities.slice(0, 2).map((activity, actIndex) => (
                   <span
                     key={actIndex}
-                    className="text-xs bg-heritage-beige/30 text-heritage-maroon px-2 py-0.5 rounded"
+                    className="text-xs bg-heritage-beige/30 text-heritage-maroon px-2 py-1 rounded leading-tight"
                   >
                     {activity}
                   </span>
@@ -218,11 +217,17 @@ export default function DestinationsWeather() {
         ))}
       </div>
 
+      {destinations.length === 0 && (
+        <div className="text-center text-sm text-gray-600 py-8">
+          No destination weather available right now.
+        </div>
+      )}
+
       {/* Update Info */}
       <div className="text-center mt-6 text-xs text-gray-500">
         <p>Weather data updates every hour • Powered by WeatherAPI</p>
-        <p className="font-noto-bengali mt-1">
-          আবহাওয়ার তথ্য প্রতি ঘন্টায় আপডেট হয়
+        <p className="font-hindi mt-1">
+          मौसम की जानकारी हर घंटे अपडेट होती है
         </p>
       </div>
     </div>

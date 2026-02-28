@@ -1,14 +1,14 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import { AuthProvider } from '@/lib/providers/auth-provider'
+import { AuthProvider } from '@/contexts/AuthContext'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Bhromon - West Bengal Tourism',
-  description: 'Discover the heritage and culture of West Bengal with Bhromon - Your complete tourism companion',
-  keywords: 'West Bengal, Tourism, Heritage, Culture, Bengal, Travel, India',
+  title: 'Bhraman - Explore Incredible India',
+  description: 'Discover the heritage and culture of India with Bhraman - Your complete tourism companion across all of India',
+  keywords: 'India, Tourism, Heritage, Culture, Travel, Incredible India, Monuments, Temples',
 }
 
 export default function RootLayout({

@@ -64,12 +64,12 @@ export default function ContactPage() {
       icon: MapPin,
       title: 'Visit Us',
       details: [
-        'Bhromon Tourism Office',
-        'Heritage Building, College Street',
-        'Kolkata, West Bengal 700073',
-        'Near University of Calcutta'
+        'Bhraman Tourism Office',
+        'Connaught Place, Janpath Road',
+        'New Delhi, India 110001',
+        'Near India Gate'
       ],
-      bengali: 'আমাদের অফিসে আসুন'
+      hindi: 'हमारे कार्यालय में आएं'
     },
     {
       icon: Phone,
@@ -80,18 +80,18 @@ export default function ContactPage() {
         'Toll Free: 1800-123-4567',
         'Available 24/7'
       ],
-      bengali: 'ফোন করুন'
+      hindi: 'फ़ोन करें'
     },
     {
       icon: Mail,
       title: 'Email Us',
       details: [
-        'info@bhromon.com',
-        'tours@bhromon.com',
-        'support@bhromon.com',
+        'info@bhraman.com',
+        'tours@bhraman.com',
+        'support@bhraman.com',
         'Quick response guaranteed'
       ],
-      bengali: 'ইমেইল করুন'
+      hindi: 'ईमेल करें'
     },
     {
       icon: Clock,
@@ -102,7 +102,7 @@ export default function ContactPage() {
         'Public Holidays: 10:00 AM - 4:00 PM',
         'Emergency support: 24/7'
       ],
-      bengali: 'অফিস সময়'
+      hindi: 'कार्यालय समय'
     }
   ]
 
@@ -133,9 +133,9 @@ export default function ContactPage() {
             
             <div className="text-center">
               <h1 className="text-2xl font-bold text-heritage-maroon">
-                Contact <span className="text-heritage-gold font-noto-bengali">যোগাযোগ</span>
+                Contact <span className="text-heritage-gold font-hindi">संपर्क</span>
               </h1>
-              <p className="text-gray-600 text-sm">Get in touch with Bhromon Tourism</p>
+              <p className="text-gray-600 text-sm">Get in touch with Bhraman Tourism</p>
             </div>
             
             <div className="w-24"></div> {/* Spacer for centering */}
@@ -151,11 +151,11 @@ export default function ContactPage() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold text-heritage-maroon mb-4">
-            Let's Plan Your <span className="text-heritage-gold font-noto-bengali">বাংলা</span> Journey
+            Let's Plan Your <span className="text-heritage-gold font-hindi">भारत</span> Journey
           </h2>
           <p className="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
             Connect with our heritage tourism experts to create unforgettable experiences 
-            across the cultural treasures of West Bengal
+            across the cultural treasures of Incredible India
           </p>
           
           {/* Floating Cultural Elements */}
@@ -185,7 +185,7 @@ export default function ContactPage() {
             transition={{ delay: 0.2 }}
           >
             <h3 className="text-3xl font-bold text-heritage-maroon mb-8">
-              Get In Touch <span className="text-heritage-gold font-noto-bengali">যোগাযোগ করুন</span>
+              Get In Touch <span className="text-heritage-gold font-hindi">संपर्क करें</span>
             </h3>
             
             <div className="space-y-8">
@@ -205,8 +205,8 @@ export default function ContactPage() {
                       <h4 className="text-xl font-semibold text-heritage-maroon mb-1">
                         {info.title}
                       </h4>
-                      <p className="text-heritage-gold font-noto-bengali text-sm mb-3">
-                        {info.bengali}
+                      <p className="text-heritage-gold font-hindi text-sm mb-3">
+                        {info.hindi}
                       </p>
                       <div className="space-y-1">
                         {info.details.map((detail, idx) => (
@@ -229,7 +229,7 @@ export default function ContactPage() {
               className="mt-12"
             >
               <h4 className="text-xl font-semibold text-heritage-maroon mb-6">
-                Follow Us <span className="text-heritage-gold font-noto-bengali">আমাদের ফলো করুন</span>
+                Follow Us <span className="text-heritage-gold font-hindi">हमें फ़ॉलो करें</span>
               </h4>
               <div className="flex gap-4">
                 {socialLinks.map((social, index) => (
@@ -257,8 +257,8 @@ export default function ContactPage() {
             <h3 className="text-3xl font-bold text-heritage-maroon mb-2">
               Plan Your Tour
             </h3>
-            <p className="text-heritage-gold font-noto-bengali mb-8">
-              আপনার ভ্রমণ পরিকল্পনা করুন
+            <p className="text-heritage-gold font-hindi mb-8">
+              अपनी यात्रा की योजना बनाएं
             </p>
 
             {submitStatus === 'success' && (
@@ -402,20 +402,20 @@ export default function ContactPage() {
           className="mt-16"
         >
           <h3 className="text-3xl font-bold text-heritage-maroon mb-8 text-center">
-            Find Us <span className="text-heritage-gold font-noto-bengali">আমাদের খুঁজুন</span>
+            Find Us <span className="text-heritage-gold font-hindi">हमें खोजें</span>
           </h3>
           <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-heritage-bronze/20">
             <div className="bg-gradient-to-br from-heritage-beige to-heritage-bronze/10 rounded-2xl p-8 text-center">
               <MapPin className="w-16 h-16 text-heritage-maroon mx-auto mb-4" />
               <h4 className="text-2xl font-bold text-heritage-maroon mb-2">Our Location</h4>
               <p className="text-gray-700 mb-4">
-                Visit our heritage office in the heart of Kolkata's cultural district
+                Visit our heritage office in the heart of New Delhi's cultural district
               </p>
               <address className="text-gray-600 not-italic leading-relaxed">
-                Bhromon Tourism Office<br />
-                Heritage Building, College Street<br />
-                Kolkata, West Bengal 700073<br />
-                Near University of Calcutta
+                Bhraman Tourism Office<br />
+                Connaught Place, Janpath Road<br />
+                New Delhi, India 110001<br />
+                Near India Gate
               </address>
               <motion.button
                 whileHover={{ scale: 1.05 }}

@@ -1,5 +1,5 @@
 -- =====================================================
--- BHROMON WEST BENGAL TOURISM - SUPABASE DATABASE SCHEMA
+-- BHRAMAN WEST BENGAL TOURISM - SUPABASE DATABASE SCHEMA
 -- =====================================================
 -- This schema creates all necessary tables for the tourism platform
 -- Run this in your Supabase SQL Editor
@@ -726,7 +726,7 @@ CREATE POLICY "Users can upload their own itinerary images" ON storage.objects F
 -- SCHEMA SETUP COMPLETE! 🎉
 -- =====================================================
 -- 
--- Your Bhromon West Bengal Tourism database is now ready!
+-- Your Bhraman West Bengal Tourism database is now ready!
 -- 
 -- Next steps:
 -- 1. Add your Supabase credentials to .env.local

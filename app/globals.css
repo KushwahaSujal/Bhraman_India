@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@300;400;500;600;700&display=swap');
 
 @layer base {
   html {
@@ -26,7 +26,7 @@
       radial-gradient(circle at 40% 40%, rgba(139, 0, 0, 0.05) 0%, transparent 50%);
   }
   
-  .bengali-cultural {
+  .indian-cultural {
     background-image: 
       radial-gradient(circle at 10% 10%, rgba(255, 107, 107, 0.1) 0%, transparent 40%),
       radial-gradient(circle at 90% 20%, rgba(255, 230, 109, 0.1) 0%, transparent 40%),
@@ -67,11 +67,11 @@
     @apply bg-gradient-to-r from-heritage-maroon to-heritage-bronze bg-clip-text text-transparent;
   }
   
-  .bengali-ornament {
+  .hindi-ornament {
     position: relative;
   }
   
-  .bengali-ornament::before {
+  .hindi-ornament::before {
     content: '';
     position: absolute;
     top: 0;

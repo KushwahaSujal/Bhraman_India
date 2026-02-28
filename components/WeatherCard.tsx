@@ -6,7 +6,6 @@ import {
   Cloud, 
   Sun, 
   CloudRain, 
-  Thermometer, 
   Wind, 
   Droplets, 
   Eye,
@@ -47,7 +46,7 @@ interface WeatherData {
 interface WeatherRecommendation {
   suitability: 'excellent' | 'good' | 'fair' | 'poor'
   message: string
-  bengaliMessage: string
+  hindiMessage: string
   activities: string[]
 }
 
@@ -58,7 +57,7 @@ interface WeatherCardProps {
 }
 
 export default function WeatherCard({ 
-  location = 'Kolkata, West Bengal', 
+  location = 'Delhi, India', 
   showForecast = false,
   compact = false 
 }: WeatherCardProps) {
@@ -121,7 +120,7 @@ export default function WeatherCard({
 
   if (loading) {
     return (
-      <div className={`heritage-gradient rounded-xl p-${compact ? '4' : '6'} text-white`}>
+      <div className={`heritage-gradient rounded-xl ${compact ? 'p-4' : 'p-6'} text-white`}>
         <div className="animate-pulse flex items-center space-x-2">
           <RefreshCw className="animate-spin" size={20} />
           <span>Loading weather...</span>
@@ -256,8 +255,8 @@ export default function WeatherCard({
               </span>
             </div>
             <p className="text-sm mb-1">{recommendation.message}</p>
-            <p className="text-sm text-heritage-beige font-noto-bengali mb-3">
-              {recommendation.bengaliMessage}
+            <p className="text-sm text-heritage-beige font-hindi mb-3">
+              {recommendation.hindiMessage || recommendation.message}
             </p>
             <div className="text-xs">
               <p className="text-heritage-beige mb-1">Recommended activities:</p>

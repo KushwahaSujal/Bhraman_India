@@ -22,7 +22,7 @@ interface AIDestinationInfo {
   localCuisine: string[]
   travelTips: string[]
   nearbyAttractions: string[]
-  bengaliName: string
+  hindiName: string
   historicalContext: string
 }
 
@@ -109,7 +109,7 @@ export default function AIDestinationCard({ destination, compact = false }: AIDe
         <div className="flex items-center justify-between mb-3">
           <div>
             <h3 className="font-semibold text-heritage-maroon">{destinationInfo.destination}</h3>
-            <p className="text-sm text-heritage-gold font-noto-bengali">{destinationInfo.bengaliName}</p>
+            <p className="text-sm text-heritage-gold font-hindi">{destinationInfo.hindiName}</p>
           </div>
           <Brain className="text-heritage-bronze opacity-60" size={20} />
         </div>
@@ -142,7 +142,7 @@ export default function AIDestinationCard({ destination, compact = false }: AIDe
             <MapPin className="mr-2" size={24} />
             {destinationInfo.destination}
           </h2>
-          <p className="text-heritage-gold font-noto-bengali text-lg">{destinationInfo.bengaliName}</p>
+          <p className="text-heritage-gold font-hindi text-lg">{destinationInfo.hindiName}</p>
         </div>
         <div className="flex items-center space-x-1 bg-heritage-gold/20 px-3 py-1 rounded-full">
           <Brain size={16} className="text-heritage-maroon" />

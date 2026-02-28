@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { motion } from 'framer-motion'
 import { 
   Brain, 
   MapPin, 
@@ -34,7 +33,7 @@ interface GeneratedItinerary {
   budgetBreakdown: any
   packingList: string[]
   culturalTips: string[]
-  bengaliPhrases: any[]
+  hindiPhrases: any[]
   emergencyContacts: string[]
   recommendedGuides?: any[]
   weatherConsiderations?: string[]
@@ -42,10 +41,10 @@ interface GeneratedItinerary {
   sustainableTravelTips?: string[]
 }
 
-const WEST_BENGAL_DESTINATIONS = [
-  'Kolkata', 'Darjeeling', 'Kalimpong', 'Siliguri', 'Digha', 'Mandarmani',
-  'Sundarbans', 'Shantiniketan', 'Murshidabad', 'Cooch Behar', 'Malda',
-  'Purulia', 'Bankura', 'Bishnupur', 'Mayurbhanj', 'Jaldapara'
+const INDIA_DESTINATIONS = [
+  'Delhi', 'Jaipur', 'Agra', 'Varanasi', 'Goa', 'Kerala',
+  'Manali', 'Shimla', 'Udaipur', 'Mumbai', 'Rishikesh', 'Amritsar',
+  'Hampi', 'Mysore', 'Leh Ladakh', 'Darjeeling'
 ]
 
 const INTEREST_OPTIONS = [
@@ -120,11 +119,11 @@ export default function AIItineraryGenerator() {
             AI Itinerary Generator
           </h1>
         </div>
-        <p className="text-heritage-gold font-noto-bengali text-lg mb-2">
-          এআই ভ্রমণ পরিকল্পনা - Personalized West Bengal Travel Plans
+        <p className="text-heritage-gold font-hindi text-lg mb-2">
+          एआई यात्रा योजना - Personalized India Travel Plans
         </p>
         <p className="text-gray-600 max-w-2xl mx-auto">
-          Create your perfect West Bengal adventure with our AI-powered itinerary generator. 
+          Create your perfect India adventure with our AI-powered itinerary generator. 
           Discover hidden gems, authentic experiences, and cultural treasures tailored to your preferences.
         </p>
       </div>
@@ -142,7 +141,7 @@ export default function AIItineraryGenerator() {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 <MapPin className="inline mr-1" size={16} />
-                Destination in West Bengal
+                Destination in India
               </label>
               <select
                 value={formData.destination}
@@ -150,7 +149,7 @@ export default function AIItineraryGenerator() {
                 className="w-full px-4 py-2 border border-heritage-bronze/30 rounded-xl focus:ring-2 focus:ring-heritage-gold focus:border-transparent"
               >
                 <option value="">Select a destination</option>
-                {WEST_BENGAL_DESTINATIONS.map(dest => (
+                {INDIA_DESTINATIONS.map(dest => (
                   <option key={dest} value={dest}>{dest}</option>
                 ))}
               </select>
@@ -293,7 +292,7 @@ export default function AIItineraryGenerator() {
             <div className="text-center py-12">
               <Brain className="mx-auto text-heritage-bronze opacity-50 mb-4" size={64} />
               <h3 className="text-lg font-medium text-gray-500 mb-2">Ready to create your itinerary</h3>
-              <p className="text-gray-400">Fill out the form and click generate to get your personalized West Bengal travel plan</p>
+              <p className="text-gray-400">Fill out the form and click generate to get your personalized India travel plan</p>
             </div>
           ) : (
             <div className="space-y-6">
@@ -408,14 +407,14 @@ export default function AIItineraryGenerator() {
                 </div>
               </div>
 
-              {/* Bengali Phrases */}
-              {generatedItinerary.bengaliPhrases.length > 0 && (
+              {/* Hindi Phrases */}
+              {generatedItinerary.hindiPhrases.length > 0 && (
                 <div>
-                  <h4 className="font-semibold text-heritage-maroon mb-2">Useful Bengali Phrases</h4>
+                  <h4 className="font-semibold text-heritage-maroon mb-2">Useful Hindi Phrases</h4>
                   <div className="space-y-1">
-                    {generatedItinerary.bengaliPhrases.slice(0, 2).map((phrase, index) => (
+                    {generatedItinerary.hindiPhrases.slice(0, 2).map((phrase, index) => (
                       <div key={index} className="text-sm">
-                        <span className="font-noto-bengali text-heritage-gold">{phrase.phrase}</span>
+                        <span className="font-hindi text-heritage-gold">{phrase.phrase}</span>
                         <span className="text-gray-600 ml-2">({phrase.meaning})</span>
                       </div>
                     ))}
@@ -436,7 +435,7 @@ export default function AIItineraryGenerator() {
                         <div className="flex justify-between items-start mb-2">
                           <div>
                             <div className="font-medium text-heritage-maroon">{guide.name}</div>
-                            <div className="text-xs text-heritage-gold font-noto-bengali">{guide.bengaliName}</div>
+                            <div className="text-xs text-heritage-gold font-hindi">{guide.hindiName}</div>
                             <div className="text-sm text-gray-600">{guide.specialty}</div>
                           </div>
                           <div className="text-right">
@@ -475,7 +474,7 @@ export default function AIItineraryGenerator() {
 
               <div className="bg-heritage-gold/10 rounded-lg p-4 text-center">
                 <p className="text-sm text-heritage-maroon font-medium">
-                  🎉 Your comprehensive West Bengal itinerary is ready!
+                  🎉 Your comprehensive India itinerary is ready!
                 </p>
                 <p className="text-xs text-gray-600 mt-1">
                   Complete with detailed daily plans, recommended local guides, budget breakdown, cultural tips, and practical travel advice.

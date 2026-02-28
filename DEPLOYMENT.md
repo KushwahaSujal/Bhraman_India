@@ -1,19 +1,19 @@
-# 🚀 Vercel Deployment Guide for Bhromon
+# 🚀 Vercel Deployment Guide for Bhraman
 
-This guide will help you deploy your Bhromon tourism platform to Vercel for production use.
+This guide will help you deploy your Bhraman tourism platform to Vercel for production use.
 
 ## Prerequisites
 
-- GitHub account with Bhromon repository
+- GitHub account with Bhraman repository
 - Vercel account (free tier available)
 - MongoDB Atlas account for database
-- Google Gemini API key: `AIzaSyDSfvUsyIuDxiTU6onPNOFvOUWf0_OpGsU`
+- Google Gemini API key
 
 ## Quick Deployment
 
 ### Option 1: One-Click Deploy
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/AmdCOdePuLsE/Bhromon)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/AmdCOdePuLsE/Bhraman)
 
 1. Click the deploy button above
 2. Connect your GitHub account
@@ -27,7 +27,7 @@ This guide will help you deploy your Bhromon tourism platform to Vercel for prod
    - Go to [vercel.com](https://vercel.com)
    - Sign up/login with GitHub
    - Click "New Project"
-   - Import your Bhromon repository
+  - Import your Bhraman repository
 
 2. **Configure Project Settings**
    - Framework Preset: `Next.js`
@@ -43,22 +43,16 @@ Navigate to your Vercel project dashboard → Settings → Environment Variables
 
 ```env
 # Database - MUST BE SET
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/bhromon?retryWrites=true&w=majority
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/bhraman?retryWrites=true&w=majority
 
 # Authentication - MUST BE SET  
 JWT_SECRET=your_super_secure_jwt_secret_minimum_32_characters
 
-# AI Configuration - Already provided
-GEMINI_API_KEY=AIzaSyDSfvUsyIuDxiTU6onPNOFvOUWf0_OpGsU
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-
-# Application URLs
-NEXTAUTH_URL=https://your-app-name.vercel.app
-NEXTAUTH_SECRET=your_nextauth_secret_32_characters_min
+# AI Configuration - MUST BE SET
+GEMINI_API_KEY=your_gemini_api_key
 
 # Weather API (Optional - has fallback data)
-WEATHER_API_KEY=your_openweathermap_api_key
+RAPIDAPI_WEATHER_KEY=your_rapidapi_weather_key
 ```
 
 ### Getting API Keys
@@ -75,15 +69,11 @@ WEATHER_API_KEY=your_openweathermap_api_key
 4. Get connection string
 5. Replace password and database name
 
-#### 3. Supabase Setup
-1. Create project at [Supabase](https://supabase.com)
-2. Go to Settings → API
-3. Copy Project URL and anon/public key
-
-#### 4. OpenWeatherMap (Optional)
-1. Sign up at [OpenWeatherMap](https://openweathermap.org/api)
-2. Get free API key
-3. Note: App has fallback weather data if this fails
+#### 3. RapidAPI Weather (Optional)
+1. Sign up at [RapidAPI](https://rapidapi.com)
+2. Subscribe to [WeatherAPI.com endpoint](https://rapidapi.com/weatherapi/api/weatherapi-com)
+3. Get free API key
+4. Note: App has fallback weather data if this fails
 
 ## Build Configuration
 
@@ -258,10 +248,10 @@ export default function RootLayout({
 
 - **Vercel Documentation**: [vercel.com/docs](https://vercel.com/docs)
 - **Next.js Deployment**: [nextjs.org/docs/deployment](https://nextjs.org/docs/deployment)
-- **Project Issues**: [GitHub Issues](https://github.com/AmdCOdePuLsE/Bhromon/issues)
+- **Project Issues**: [GitHub Issues](https://github.com/AmdCOdePuLsE/Bhraman/issues)
 
 ---
 
-🎉 **Congratulations!** Your Bhromon tourism platform is now live on Vercel!
+🎉 **Congratulations!** Your Bhraman tourism platform is now live on Vercel!
 
 Share your deployment URL and start showcasing the beautiful heritage of West Bengal to the world! 🏛️✨

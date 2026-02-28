@@ -1,4 +1,4 @@
-# Bhromon Project Structure & Supabase Setup Status
+# Bhraman Project Structure & Supabase Setup Status
 
 ## 🎯 **Current Status: READY FOR DATABASE SETUP**
 
@@ -25,7 +25,7 @@
 ## 📁 **Project Structure:**
 
 ```
-Bhromon/
+Bhraman/
 ├── app/
 │   ├── page.tsx                 # Landing page with Bengali culture
 │   ├── auth/supabase/page.tsx   # Supabase authentication 
