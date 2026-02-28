@@ -13,7 +13,7 @@ const nextConfig = {
   // Webpack configuration for external packages
   webpack: (config, { isServer }) => {
     if (isServer) {
-      config.externals.push('mongoose', 'bcryptjs', 'jsonwebtoken', '@google/generative-ai');
+      config.externals.push('mongoose', 'bcryptjs', '@google/generative-ai');
     }
     return config;
   },

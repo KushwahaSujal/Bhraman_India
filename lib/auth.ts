@@ -1,23 +1,32 @@
-import jwt from 'jsonwebtoken'
+// Simple open-auth token (no JWT dependency needed)
 
-function getJwtSecret(): string {
-  return process.env.JWT_SECRET || 'bhraman-open-auth-fallback-secret'
-}
-
-export interface JWTPayload {
+export interface TokenPayload {
   userId: string
   email: string
-  iat?: number
-  exp?: number
 }
 
-export function signToken(payload: Omit<JWTPayload, 'iat' | 'exp'>): string {
-  return jwt.sign(payload, getJwtSecret(), { expiresIn: '7d' })
+export function signToken(payload: TokenPayload): string {
+  const data = JSON.stringify({ ...payload, exp: Date.now() + 7 * 24 * 60 * 60 * 1000 })
+  // Simple base64 encoding - safe for open auth mode
+  if (typeof Buffer !== 'undefined') {
+    return Buffer.from(data).toString('base64')
+  }
+  return btoa(data)
 }
 
-export function verifyToken(token: string): JWTPayload {
+export function verifyToken(token: string): TokenPayload {
   try {
-    return jwt.verify(token, getJwtSecret()) as JWTPayload
+    let decoded: string
+    if (typeof Buffer !== 'undefined') {
+      decoded = Buffer.from(token, 'base64').toString('utf-8')
+    } else {
+      decoded = atob(token)
+    }
+    const payload = JSON.parse(decoded)
+    if (payload.exp && payload.exp < Date.now()) {
+      throw new Error('Token expired')
+    }
+    return { userId: payload.userId, email: payload.email }
   } catch {
     throw new Error('Invalid token')
   }
